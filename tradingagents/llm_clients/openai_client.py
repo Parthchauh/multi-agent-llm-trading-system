@@ -56,6 +56,12 @@ class OpenAIClient(BaseLLMClient):
         self.warn_if_unknown_model()
         llm_kwargs = {"model": self.model}
 
+        if self.provider == "openai" and "seed" in self.kwargs:
+            raise ValueError(
+                "OpenAI Responses API does not expose a deterministic seed; "
+                "remove seed or use a supported Chat Completions-compatible provider."
+            )
+
         # Provider-specific base URL and auth
         if self.provider in _PROVIDER_CONFIG:
             base_url, api_key_env = _PROVIDER_CONFIG[self.provider]
@@ -73,6 +79,27 @@ class OpenAIClient(BaseLLMClient):
         for key in _PASSTHROUGH_KWARGS:
             if key in self.kwargs:
                 llm_kwargs[key] = self.kwargs[key]
+
+        if self.provider != "openai":
+            # Chat Completions-compatible providers expose these controls through
+            # LangChain. Individual vendors may still document narrower support.
+            for key in ("temperature", "seed"):
+                if key in self.kwargs:
+                    llm_kwargs[key] = self.kwargs[key]
+        elif "temperature" in self.kwargs:
+            model_name = self.model.casefold()
+            reasoning_effort = self.kwargs.get("reasoning_effort")
+            unsupported_gpt5_setting = (
+                model_name.startswith("gpt-5")
+                and "chat" not in model_name
+                and reasoning_effort != "none"
+            )
+            if unsupported_gpt5_setting:
+                raise ValueError(
+                    "temperature is not reliably supported for GPT-5 Responses "
+                    "reasoning calls; use a chat model or reasoning_effort='none'."
+                )
+            llm_kwargs["temperature"] = self.kwargs["temperature"]
 
         # Native OpenAI: use Responses API for consistent behavior across
         # all model families. Third-party providers use Chat Completions.

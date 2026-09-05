@@ -8,6 +8,7 @@ from .validators import validate_model
 _PASSTHROUGH_KWARGS = (
     "timeout", "max_retries", "api_key", "max_tokens",
     "callbacks", "http_client", "http_async_client", "effort",
+    "temperature",
 )
 
 
@@ -32,6 +33,10 @@ class AnthropicClient(BaseLLMClient):
     def get_llm(self) -> Any:
         """Return configured ChatAnthropic instance."""
         self.warn_if_unknown_model()
+        if "seed" in self.kwargs:
+            raise ValueError(
+                "Anthropic's LangChain chat integration does not expose a deterministic seed."
+            )
         llm_kwargs = {"model": self.model}
 
         if self.base_url:

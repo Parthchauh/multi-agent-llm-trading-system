@@ -18,6 +18,17 @@ from .managers.research_manager import create_research_manager
 from .managers.portfolio_manager import create_portfolio_manager
 
 from .trader.trader import create_trader
+from .regime_analyst import RegimeAnalystAgent
+from .strategy_generator import (
+    StrategyGeneratorAgent,
+    StrategyProposal,
+    StrategyProposalDraft,
+)
+from .structured_output import (
+    InvocationTelemetry,
+    LangChainStructuredOutputClient,
+    StructuredOutputClient,
+)
 
 __all__ = [
     "FinancialSituationMemory",
@@ -37,4 +48,11 @@ __all__ = [
     "create_conservative_debator",
     "create_social_media_analyst",
     "create_trader",
+    "RegimeAnalystAgent",
+    "StrategyGeneratorAgent",
+    "StrategyProposal",
+    "StrategyProposalDraft",
+    "LangChainStructuredOutputClient",
+    "StructuredOutputClient",
+    "InvocationTelemetry",
 ]
