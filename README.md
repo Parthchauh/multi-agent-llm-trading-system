@@ -265,6 +265,16 @@ trading-research backtest strategy.json prices.csv --output artifacts/backtest.j
 trading-research --help
 ```
 
+View persisted experiment reports locally without exposing a write or
+live-trading endpoint:
+
+```bash
+trading-research serve-dashboard --database research.sqlite
+```
+
+Open the printed `http://127.0.0.1:8080` address in a browser. The dashboard
+exposes only canonical JSON and Markdown report views.
+
 For a full configured multi-agent research run, use the protected executable
 entry point with a supported LLM provider and historical data:
 

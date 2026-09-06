@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import platform
 import sqlite3
+import subprocess
 import sys
 import uuid
 from collections.abc import Callable, Mapping
@@ -192,6 +193,15 @@ class SQLiteResearchRepository:
             raise ResearchPlatformError("No report exists for this experiment.")
         return ExperimentReport.model_validate_json(row[0])
 
+    def list_reports(self) -> tuple[ExperimentReport, ...]:
+        """Return persisted canonical reports newest first for the local dashboard."""
+
+        with self._connect() as connection:
+            rows = connection.execute(
+                "SELECT report_json FROM reports ORDER BY created_at DESC, experiment_id"
+            )
+            return tuple(ExperimentReport.model_validate_json(row[0]) for row in rows)
+
 
 ArchitectureExecutor = Callable[[ExperimentConfig, str, int], Mapping[str, Any]]
 
@@ -201,7 +211,7 @@ class ExperimentRunner:
 
     def __init__(self, repository: SQLiteResearchRepository, *, git_commit: str | None = None) -> None:
         self.repository = repository
-        self.git_commit = git_commit
+        self.git_commit = git_commit if git_commit is not None else _current_git_commit()
 
     def run(self, config: ExperimentConfig, executor: ArchitectureExecutor) -> ExperimentReport:
         self.repository.save_experiment(config)
@@ -326,3 +336,21 @@ def _utc_now() -> datetime:
 
 def _iso(value: datetime | None) -> str | None:
     return None if value is None else value.isoformat()
+
+
+def _current_git_commit() -> str | None:
+    """Best-effort code identity; a non-Git installation remains runnable."""
+
+    try:
+        completed = subprocess.run(
+            ["git", "rev-parse", "HEAD"],
+            capture_output=True,
+            check=True,
+            cwd=Path.cwd(),
+            text=True,
+            timeout=2,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return None
+    commit = completed.stdout.strip()
+    return commit or None
