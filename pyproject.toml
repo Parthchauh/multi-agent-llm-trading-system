@@ -45,7 +45,7 @@ dev = [
 tradingagents = "cli.main:app"
 
 [tool.setuptools.packages.find]
-include = ["tradingagents*", "cli*", "strategies*", "backtesting*", "data*", "regime*", "evaluation*"]
+include = ["tradingagents*", "cli*", "strategies*", "backtesting*", "data*", "regime*", "evaluation*", "risk*", "research_validation*"]
 
 [tool.setuptools.package-data]
 cli = ["static/*"]

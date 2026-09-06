@@ -18,6 +18,7 @@ from evaluation.models import (
     ScoreMetric,
     ViabilityPolicy,
 )
+from strategies.schema import StrategySchema
 from tradingagents.research import (
     ChildStrategyValidationError,
     RefinementAcceptancePolicy,
@@ -28,7 +29,6 @@ from tradingagents.research import (
     create_initial_strategy_record,
     promote_refinement_strategy,
 )
-from strategies.schema import StrategySchema
 
 
 def _raw_strategy(*, entry_threshold: float = 55.0) -> dict[str, object]:

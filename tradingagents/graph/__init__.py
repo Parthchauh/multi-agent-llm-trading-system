@@ -16,6 +16,14 @@ from .research_models import (
     StrategyAttemptRecord,
 )
 from .research_state import ResearchState
+from .sprint6_lifecycle import (
+    Sprint6Event,
+    Sprint6LifecycleConfig,
+    Sprint6ResearchGraph,
+    Sprint6RunResult,
+    Sprint6RunStatus,
+    StrategyExecutionRecord,
+)
 
 __all__ = [
     "TradingAgentsGraph",
@@ -32,4 +40,10 @@ __all__ = [
     "SamplingMetadata",
     "StrategyAttemptRecord",
     "ResearchState",
+    "Sprint6Event",
+    "Sprint6LifecycleConfig",
+    "Sprint6ResearchGraph",
+    "Sprint6RunResult",
+    "Sprint6RunStatus",
+    "StrategyExecutionRecord",
 ]

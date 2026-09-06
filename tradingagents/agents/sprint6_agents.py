@@ -14,7 +14,7 @@ import math
 import re
 from typing import Any, Literal
 
-from pydantic import BaseModel, ConfigDict, Field, ValidationError, field_validator, model_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 from backtesting.models import BacktestMetrics, BacktestResult
 from regime.models import RegimeAssessment
@@ -31,7 +31,6 @@ from tradingagents.agents.prompts.sprint6 import (
     STRATEGY_CRITIC_PROMPT,
 )
 from tradingagents.agents.structured_output import PromptMessages, StructuredOutputClient
-
 
 _MAX_LIST_ITEMS = 8
 _MAX_TEXT_LENGTH = 2_000
