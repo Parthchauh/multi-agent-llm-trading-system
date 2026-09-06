@@ -143,9 +143,21 @@ class CompiledStrategy:
         return self._long_entry.copy(deep=True)
 
     @property
+    def entry_signals(self) -> pd.Series:
+        """Compatibility alias for :attr:`long_entry`, returned defensively."""
+
+        return self.long_entry
+
+    @property
     def long_exit(self) -> pd.Series:
         """Copy of the aligned long-exit boolean signal."""
         return self._long_exit.copy(deep=True)
+
+    @property
+    def exit_signals(self) -> pd.Series:
+        """Compatibility alias for :attr:`long_exit`, returned defensively."""
+
+        return self.long_exit
 
     @property
     def signals(self) -> pd.DataFrame:

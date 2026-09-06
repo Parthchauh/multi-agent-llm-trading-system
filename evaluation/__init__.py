@@ -27,6 +27,17 @@ from evaluation.models import (
     RankingPolicy,
     ViabilityPolicy,
 )
+from evaluation.platform import (
+    ExperimentReport,
+    ExperimentRunner,
+    FailureType,
+    ReproducibilityRecord,
+    ResearchEvent,
+    ResearchPlatformError,
+    ResearchRun,
+    SQLiteResearchRepository,
+    report_markdown,
+)
 from evaluation.ranking import rank_candidates, rank_viable_candidates
 from evaluation.research_metrics import (
     measure_strategy_complexity,
@@ -57,4 +68,13 @@ __all__ = [
     "run_baseline",
     "strategy_execution_fingerprint",
     "summarize_research_runs",
+    "ExperimentReport",
+    "ExperimentRunner",
+    "FailureType",
+    "ResearchEvent",
+    "ResearchPlatformError",
+    "ResearchRun",
+    "ReproducibilityRecord",
+    "SQLiteResearchRepository",
+    "report_markdown",
 ]

@@ -235,3 +235,44 @@ Please reference our work if you find *TradingAgents* provides you with some hel
 ```
 
 # multi-agent-llm-trading-system
+
+## Authoritative research workbench
+
+This repository also contains a strict, research-only pipeline for the
+project **Multi-Agent LLM Systems for Trading Strategy Generation and
+Backtesting**. It does not place live trades and it does not treat an LLM
+opinion as an execution decision.
+
+```text
+OHLCV data → causal regime analysis → structured strategy JSON
+→ Pydantic + semantic validation → deterministic compiler
+→ next-bar backtest with costs → viability/risk gates
+→ bounded debate/critique/refinement → OOS/robustness evaluation → reports
+```
+
+Install the project for local development:
+
+```bash
+python -m pip install -e ".[dev]"
+```
+
+Validate a strategy and run a deterministic backtest (strategy JSON and CSV
+must use the canonical schema/OHLCV column names):
+
+```bash
+trading-research validate-strategy strategy.json
+trading-research backtest strategy.json prices.csv --output artifacts/backtest.json
+trading-research --help
+```
+
+For a full configured multi-agent research run, use the protected executable
+entry point with a supported LLM provider and historical data:
+
+```bash
+python -m scripts.run_research_e2e --symbol AAPL --mode MULTI_AGENT_FULL
+```
+
+The runner writes structured artifacts (strategy, lineage, metrics, risk,
+agent trace, and summary) to `results/e2e/`. The final holdout remains sealed
+until candidate selection is frozen; all LLM-produced strategies must cross
+the same validation, compiler, and backtesting gates.

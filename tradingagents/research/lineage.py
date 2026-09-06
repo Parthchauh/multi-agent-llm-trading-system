@@ -126,6 +126,35 @@ class StrategyVersionRecord(_FrozenStrictModel):
 
         return self.lineage.strategy_id
 
+    @property
+    def strategy_hash(self) -> str:
+        """Compatibility alias for the immutable executable strategy fingerprint.
+
+        This exposes no new mutable metadata; callers that previously used a
+        strategy hash receive the same canonical semantic SHA-256 recorded in
+        the lineage contract.
+        """
+
+        return self.lineage.execution_fingerprint
+
+    @property
+    def parent_strategy_id(self) -> str | None:
+        """Compatibility view of this immutable version's parent identity."""
+
+        return self.lineage.parent_strategy_id
+
+    @property
+    def generation(self) -> int:
+        """Compatibility view of the immutable lineage generation."""
+
+        return self.lineage.generation
+
+    @property
+    def revision_reason(self) -> str:
+        """Compatibility view of the immutable revision rationale."""
+
+        return self.lineage.revision_reason
+
 
 def derive_strategy_id(
     *,

@@ -113,17 +113,17 @@ class ExperimentConfig(BaseModel):
 
     @property
     def is_runnable_in_current_sprint(self) -> bool:
-        """False until Sprint 8 supplies the persistent experiment runner."""
-        return False
+        """Sprint 8 supplies a runner; callers still inject an authoritative executor."""
+        return True
 
     @property
     def implementation_note(self) -> str:
         if self.architecture is ExperimentArchitecture.SINGLE_AGENT:
             return (
-                "A controlled single-generator path exists, but no Sprint 5 "
-                "experiment runner has been wired."
+                "A controlled single-generator path can run through the Sprint 8 "
+                "experiment runner with a configured authoritative executor."
             )
         return (
-            "This is a declarative treatment definition; its required agent "
-            "roles are scheduled for later sprints."
+            "This treatment is runnable through the Sprint 8 experiment runner "
+            "when its bounded authoritative architecture executor is configured."
         )
