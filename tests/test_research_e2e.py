@@ -105,6 +105,8 @@ def test_e2e_runner_configuration(tmp_path: Path) -> None:
     assert result["selected_strategy_id"] is not None
     assert "total_return_pct" in result["validation_metrics"]
     assert "total_return_pct" in result["test_metrics"]
+    config = json.loads((tmp_path / "test_cfg" / "config.json").read_text(encoding="utf-8"))
+    assert config["position_size_pct"] == 10.0
 
 
 def test_e2e_invalid_data_fails(tmp_path: Path) -> None:

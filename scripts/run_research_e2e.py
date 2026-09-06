@@ -28,11 +28,17 @@ from pathlib import Path
 from typing import Any
 
 import pandas as pd
+from dotenv import load_dotenv
 
 # Add workspace to path if needed
 workspace_dir = str(Path(__file__).resolve().parent.parent)
 if workspace_dir not in sys.path:
     sys.path.insert(0, workspace_dir)
+
+# A manual invocation should use the same local provider configuration as the
+# application CLI.  ``override=False`` preserves an explicitly supplied
+# environment variable and the key never enters logs or result artifacts.
+load_dotenv(Path(workspace_dir) / ".env", override=False)
 
 from backtesting.engine import BacktestEngine
 from backtesting.models import BacktestConfig
@@ -207,6 +213,7 @@ def run_e2e_research(
     initial_capital: float = 100_000.0,
     commission: float = 0.001,
     slippage: float = 0.0005,
+    position_size_pct: float = 10.0,
     model_provider: str = "google",
     model_name: str = "gemini-2.5-flash",
     structured_client: StructuredOutputClient | None = None,
@@ -268,7 +275,7 @@ def run_e2e_research(
         initial_capital=initial_capital,
         commission_pct=commission,
         slippage_pct=slippage,
-        position_size_pct=50.0,
+        position_size_pct=position_size_pct,
     )
 
     # 4. Configure LLM Client
@@ -428,6 +435,7 @@ def run_e2e_research(
         "initial_capital": initial_capital,
         "commission": commission,
         "slippage": slippage,
+        "position_size_pct": position_size_pct,
         "model_provider": model_provider,
         "model_name": model_name,
         "max_debate_rounds": max_debate_rounds,
@@ -566,6 +574,12 @@ def main() -> None:
     parser.add_argument("--initial-capital", type=float, default=100000.0, help="Initial portfolio capital")
     parser.add_argument("--commission", type=float, default=0.001, help="Commission percentage")
     parser.add_argument("--slippage", type=float, default=0.0005, help="Slippage percentage")
+    parser.add_argument(
+        "--position-size-pct",
+        type=float,
+        default=10.0,
+        help="Deterministic position size as a percentage of capital",
+    )
     parser.add_argument("--model-provider", default="google", help="LLM Provider (google, openai, anthropic)")
     parser.add_argument("--model-name", default="gemini-2.5-flash", help="Model name")
     parser.add_argument("--max-debate-rounds", type=int, default=1, help="Debate rounds")
@@ -587,6 +601,7 @@ def main() -> None:
             initial_capital=args.initial_capital,
             commission=args.commission,
             slippage=args.slippage,
+            position_size_pct=args.position_size_pct,
             model_provider=args.model_provider,
             model_name=args.model_name,
             max_debate_rounds=0,
@@ -604,6 +619,7 @@ def main() -> None:
             initial_capital=args.initial_capital,
             commission=args.commission,
             slippage=args.slippage,
+            position_size_pct=args.position_size_pct,
             model_provider=args.model_provider,
             model_name=args.model_name,
             max_debate_rounds=args.max_debate_rounds,
@@ -629,6 +645,7 @@ def main() -> None:
             initial_capital=args.initial_capital,
             commission=args.commission,
             slippage=args.slippage,
+            position_size_pct=args.position_size_pct,
             model_provider=args.model_provider,
             model_name=args.model_name,
             max_debate_rounds=args.max_debate_rounds,
