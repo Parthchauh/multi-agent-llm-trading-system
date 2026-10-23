@@ -41,7 +41,13 @@ class PaperJournal:
         self._append(event_type, details)
 
     def _append(self, event_type: str, data: dict[str, Any]) -> None:
-        ts = datetime.fromisoformat(data.get("timestamp") or data.get("signal_time") or data.get("fill_time") or datetime.now().isoformat())
+        timestamp = (data.get("timestamp") or data.get("signal_time")
+                     or data.get("fill_time") or datetime.now().isoformat())
+        # Pydantic emits UTC as Z, which Python 3.10's fromisoformat rejects.
+        # Preserve the instant and timezone without changing the stored event data.
+        if timestamp.endswith('Z'):
+            timestamp = timestamp[:-1] + '+00:00'
+        ts = datetime.fromisoformat(timestamp)
         entry = PaperJournalEntry(timestamp=ts, event_type=event_type, data=data)
         self.entries.append(entry)
         if self.output_path:
