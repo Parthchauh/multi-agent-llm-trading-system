@@ -4453,6 +4453,7 @@ version = "0.2.3"
 source = { editable = "." }
 dependencies = [
     { name = "backtrader" },
+    { name = "cryptography" },
     { name = "langchain-anthropic" },
     { name = "langchain-core" },
     { name = "langchain-experimental" },
@@ -4496,6 +4497,7 @@ dev = [
 requires-dist = [
     { name = "backtrader", specifier = ">=1.9.78.123" },
     { name = "bandit", marker = "extra == 'audit'", specifier = ">=1.8.0" },
+    { name = "cryptography", specifier = ">=50.0.0" },
     { name = "cyclonedx-bom", marker = "extra == 'audit'", specifier = ">=5.0.0" },
     { name = "detect-secrets", marker = "extra == 'audit'", specifier = ">=1.5.0" },
     { name = "langchain-anthropic", specifier = ">=0.3.15" },

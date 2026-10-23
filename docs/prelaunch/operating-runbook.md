@@ -1,5 +1,29 @@
 # Local operation, incidents and recovery
 
+## Study control, service alerts and encrypted recovery
+
+`register-study PLAN.json --database results/studies.sqlite` freezes a complete
+development plan before any model study starts. `assess-study STUDY_ID EXPERIMENT_ID...`
+checks recorded reports against it. Budget auditing is retrospective; use a
+provider-side zero-spend limit or a local model before allowing model calls.
+The included zero-cost-study-template.json describes recorded synthetic evidence
+only; replace its inputs through a new registered plan for a genuine study.
+
+The TLS service stores numeric HTTP observations in results/service-metrics.sqlite.
+Run `service-health` locally to evaluate observations and persist alert incidents.
+`acknowledge-alert INCIDENT_ID` records acknowledgement, not resolution. This
+inbox sends no messages externally and is not an uptime probe. Defaults of 20
+requests, 5% server errors and 2000 ms p95 are provisional operational thresholds.
+Configure external monitoring separately before claiming production readiness.
+
+After `backup-state`, use `encrypt-backup BACKUP_DIRECTORY OUTPUT.enc`. Enter a
+long unique passphrase privately and store it separately. `restore-encrypted-backup
+OUTPUT.enc NEW_DIRECTORY` authenticates before restoring and revokes saved API
+sessions. Encryption retains plaintext inputs; protect their filesystem access.
+The current envelope is bounded to 64 MiB of source files. Decrypted staging is
+removed, but secure disk erasure is not guaranteed. Copy encrypted backups off-host
+and perform operator-supervised restore drills before relying on disaster recovery.
+
 This is a research-only fork. All commands below remain local. No broker adapter,
 paper promotion, statistical certification or automatic deployment is enabled.
 Do not expose the unauthenticated local dashboard through a public proxy.

@@ -10,13 +10,13 @@ performed. A local passing suite is not independent review or a production audit
 | P0 correctness | Acceptance matrix, independent accounting goldens, full non-live suite | Reviewed coherent source and lock commit |
 | Historical baseline | Original 376 passed/15 setup errors and later post-change runs | Preserve gap; never relabel a rerun as untouched |
 | Research robustness | Fold-specific development campaigns, distributions, uncertainty and sensitivity diagnostics | Predeclared independent-trial methodology, external review and certification implementation/approval |
-| Full architecture study | Five canonical executors; matched validation report comparison; development-only sealing | Collect genuine matched provider evidence and review utility/cost conclusions; recorded fixtures only prove plumbing |
+| Full architecture study | Five executors; immutable study plans, configuration/data/time adherence checks, matched validation comparisons | Genuine zero-cost model study and independent review; recorded fixtures only prove plumbing |
 | Data quality | Explicit adjustment/calendar contracts, hashes and offline replay | Licensed PIT universe, delistings, exchange sessions and vendor methodology evidence |
 | Paper | Persistent local simulation, reconciliation, kill and drift controls | Certified candidate, approved activation, genuinely elapsed days/trades and reviewed incidents |
-| Security | TLS/auth/RBAC/isolation tests, static scanner, dependency audit, SBOM and secret scan records | Independent review, operational monitoring, production capacity/tenant review and deployment approval |
+| Security | TLS/auth/RBAC/isolation tests, scans/SBOM, numeric request metrics and persistent local alerts | Independent review, external alert delivery, uptime/capacity/tenant review and deployment approval |
 | Reproducibility | Source and matching lock committed together in 7b7a2cb; clean installation and installed commands | Independent review and remote reproduction remain pending |
 | Container and CI | Locked workflow and container recipe | Actual remote matrix and container build/run/digest; Docker unavailable locally |
-| Backup | Verified local SQLite/artifact restore and session revocation | Operator retention, encryption/off-host storage and scheduled restore drill |
+| Backup | Local SQLite/artifact restore, session revocation and authenticated encrypted envelopes | Operator key custody, off-host storage/retention and scheduled restore drill |
 | Terms/legal | Attribution and installed license inventory | Human third-party NOTICE review, provider/model/data agreements and jurisdiction-specific review |
 
 Do not mark any row complete merely because its implementation file or workflow

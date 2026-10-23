@@ -21,6 +21,8 @@ TYPE_PATHS = ['research_service', 'research_validation/campaign.py',
     'data/adjustments.py', 'evaluation/ablation.py',
     'paper_trading/operations.py', 'cli/reproducibility.py']
 TYPE_PATHS.append('paper_trading/drift.py')
+LINT_PATHS.append('research_validation/study.py')
+TYPE_PATHS.append('research_validation/study.py')
 
 
 def main():

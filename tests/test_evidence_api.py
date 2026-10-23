@@ -9,6 +9,7 @@ from http.server import ThreadingHTTPServer
 import pytest
 
 from research_service.access import AccessStore
+from research_service.monitoring import ServiceMonitor
 from research_service.server import handler
 
 
@@ -46,7 +47,8 @@ def test_real_tls_login_tenant_boundaries_malformed_requests_and_revocation(tmp_
             self.reads.append(identity)
             return Report()
     repository = Repository()
-    server = ThreadingHTTPServer(('127.0.0.1', 0), handler(access, repository))
+    monitor = ServiceMonitor(tmp_path/'metrics.sqlite')
+    server = ThreadingHTTPServer(('127.0.0.1', 0), handler(access, repository, monitor))
     context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
     context.minimum_version = ssl.TLSVersion.TLSv1_2
     context.load_cert_chain(cert_path, key_path)
@@ -77,6 +79,11 @@ def test_real_tls_login_tenant_boundaries_malformed_requests_and_revocation(tmp_
         assert repository.reads == ['alpha-evidence']
         assert request('DELETE', '/v1/session', token=token)[0] == 200
         assert request('GET', '/v1/experiments/alpha-evidence', token=token)[0] == 403
+        metrics = monitor.snapshot(minimum_requests=1)
+        assert metrics['requests'] == 10
+        assert metrics['access_denials'] == 5
+        assert metrics['server_error_rate'] == 0
+        assert token not in (tmp_path/'metrics.sqlite').read_bytes().decode('latin1')
     finally:
         server.shutdown()
         server.server_close()

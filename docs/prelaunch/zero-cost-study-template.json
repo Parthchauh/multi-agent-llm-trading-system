@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "title": "Recorded fixture study",
+  "hypothesis": "Compare descriptive development outcomes.",
+  "treatments": [
+    {
+      "experiment_id": "single_agent",
+      "architecture": "single_agent",
+      "provider": "recorded",
+      "model": "fixture-v1",
+      "dataset_id": "fixture",
+      "dataset_fingerprint": null,
+      "start": "2020-01-01",
+      "end": "2022-01-01",
+      "symbols": [
+        "AAA"
+      ],
+      "prompt_versions": [
+        {
+          "role": "generator",
+          "version": "v1",
+          "content_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        }
+      ],
+      "information_set": "technical_only",
+      "development_only": true,
+      "seed": 7,
+      "model_settings": {
+        "temperature": null,
+        "timeout_seconds": null,
+        "max_retries": null
+      },
+      "transaction_costs": {
+        "initial_capital": 100000.0,
+        "commission_pct": 0.001,
+        "slippage_pct": 0.0005,
+        "position_size_pct": 10.0,
+        "maximum_holding_days": null
+      },
+      "split_config": {
+        "context_end": "2020-06-01",
+        "validation_end": "2021-01-01",
+        "test_end": "2021-06-01"
+      },
+      "robustness_config": {
+        "walk_forward": false,
+        "cost_sensitivity": false,
+        "slippage_sensitivity": false,
+        "parameter_perturbation": false,
+        "entry_delay": false,
+        "trade_skipping": false,
+        "trade_bootstrap": false,
+        "regime_stability": false
+      },
+      "strategy_schema_version": "strategy-schema-v1",
+      "repetitions": 1,
+      "debate_rounds": 0,
+      "refinement_rounds": 0
+    },
+    {
+      "experiment_id": "multi_agent_no_debate",
+      "architecture": "multi_agent_no_debate",
+      "provider": "recorded",
+      "model": "fixture-v1",
+      "dataset_id": "fixture",
+      "dataset_fingerprint": null,
+      "start": "2020-01-01",
+      "end": "2022-01-01",
+      "symbols": [
+        "AAA"
+      ],
+      "prompt_versions": [
+        {
+          "role": "generator",
+          "version": "v1",
+          "content_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        }
+      ],
+      "information_set": "technical_only",
+      "development_only": true,
+      "seed": 7,
+      "model_settings": {
+        "temperature": null,
+        "timeout_seconds": null,
+        "max_retries": null
+      },
+      "transaction_costs": {
+        "initial_capital": 100000.0,
+        "commission_pct": 0.001,
+        "slippage_pct": 0.0005,
+        "position_size_pct": 10.0,
+        "maximum_holding_days": null
+      },
+      "split_config": {
+        "context_end": "2020-06-01",
+        "validation_end": "2021-01-01",
+        "test_end": "2021-06-01"
+      },
+      "robustness_config": {
+        "walk_forward": false,
+        "cost_sensitivity": false,
+        "slippage_sensitivity": false,
+        "parameter_perturbation": false,
+        "entry_delay": false,
+        "trade_skipping": false,
+        "trade_bootstrap": false,
+        "regime_stability": false
+      },
+      "strategy_schema_version": "strategy-schema-v1",
+      "repetitions": 1,
+      "debate_rounds": 0,
+      "refinement_rounds": 0
+    }
+  ],
+  "dataset_hashes": {
+    "AAA": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "data_rights_reference": "synthetic fixture",
+  "review_reference": "pending independent review",
+  "primary_metric": "total_return_pct",
+  "missing_outcomes": "retain_and_disclose",
+  "maximum_invocations_per_run": 1,
+  "maximum_total_cost": 0.0,
+  "currency": "USD"
+}

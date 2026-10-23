@@ -15,6 +15,59 @@ from strategies.schema import StrategySchema
 
 
 def register(app: typer.Typer) -> None:
+    @app.command('encrypt-backup')
+    def encrypt_local_backup(source: Path, destination: Path) -> None:
+        """Encrypt a local backup with a privately entered passphrase; retain the source."""
+        import getpass
+
+        from research_service.encrypted_backups import encrypt_backup
+        password = getpass.getpass('Backup passphrase (at least 16 characters): ')
+        if password != getpass.getpass('Repeat passphrase: '):
+            raise typer.BadParameter('Passphrases did not match.')
+        typer.echo(json.dumps(encrypt_backup(source, destination, password)))
+
+    @app.command('restore-encrypted-backup')
+    def restore_encrypted(source: Path, destination: Path) -> None:
+        """Authenticate and restore encrypted state into a new directory."""
+        import getpass
+
+        from research_service.encrypted_backups import restore_encrypted_backup
+        typer.echo(json.dumps(restore_encrypted_backup(source, destination,
+            getpass.getpass('Backup passphrase: '))))
+
+    @app.command('register-study')
+    def register_study(plan: Path, database: Path = Path('results/studies.sqlite')) -> None:
+        """Freeze a development study plan before runs; does not approve paid calls or certification."""
+        from research_validation.study import StudyPlan, StudyRegistry
+        result = StudyRegistry(database).register(StudyPlan.model_validate_json(plan.read_text(encoding='utf-8')))
+        typer.echo(json.dumps(result, indent=2, allow_nan=False))
+
+    @app.command('assess-study')
+    def assess_study(study_id: str, experiment_ids: list[str] = typer.Argument(...),
+                     study_database: Path = Path('results/studies.sqlite'),
+                     research_database: Path = Path('research.sqlite')) -> None:
+        """Check completed reports against a frozen plan; budgets are audited retrospectively."""
+        from evaluation.platform import SQLiteResearchRepository
+        from research_validation.study import StudyRegistry
+        repository = SQLiteResearchRepository(research_database)
+        report = StudyRegistry(study_database).assess(study_id,
+            [repository.load_report(identity) for identity in experiment_ids])
+        typer.echo(json.dumps(report, indent=2, allow_nan=False))
+
+    @app.command('service-health')
+    def service_health(database: Path = Path('results/service-metrics.sqlite'),
+                       window_seconds: int = typer.Option(300, min=1, max=86400)) -> None:
+        """Read local service metrics and persist alerts; no external notification is sent."""
+        from research_service.monitoring import ServiceMonitor
+        typer.echo(json.dumps(ServiceMonitor(database).snapshot(window_seconds=window_seconds), indent=2))
+
+    @app.command('acknowledge-alert')
+    def acknowledge_alert(incident_id: str, database: Path = Path('results/service-metrics.sqlite')) -> None:
+        """Local operator acknowledges a persisted incident without deleting its record."""
+        from research_service.monitoring import ServiceMonitor
+        ServiceMonitor(database).acknowledge(incident_id)
+        typer.echo(json.dumps({'status': 'ACKNOWLEDGED', 'incident_id': incident_id}))
+
     @app.command('monitor-simulation')
     def monitor_simulation(session_id: str, reference_bundle: Path,
                            database: Path = Path('results/simulations.sqlite')) -> None:
@@ -128,11 +181,12 @@ def register(app: typer.Typer) -> None:
     def serve_api(certificate: Path, private_key: Path,
                   access_database: Path = Path("results/service-access.sqlite"),
                   research_database: Path = Path("research.sqlite"),
-                  port: int = typer.Option(8443, min=1, max=65535)) -> None:
+                  port: int = typer.Option(8443, min=1, max=65535),
+                  metrics_database: Path = Path('results/service-metrics.sqlite')) -> None:
         """Serve the separate TLS-only authenticated, tenant-scoped read API on loopback."""
         from research_service.server import serve
         serve(access_database=access_database, research_database=research_database,
-              certificate=certificate, private_key=private_key, port=port)
+              certificate=certificate, private_key=private_key, port=port, metrics_database=metrics_database)
 
     @app.command("snapshot-dataset")
     def snapshot_dataset(prices: Path, metadata: Path,

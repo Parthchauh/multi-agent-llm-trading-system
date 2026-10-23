@@ -1,5 +1,17 @@
 # Prelaunch implementation status
 
+## Zero-budget completion work: 23 October 2026
+
+Added immutable development-study plans and adherence audits, persisted service
+metrics and a local alert inbox, authenticated encrypted backup/restore, and a
+Windows SQLite file-handle fix. Architecture comparisons now also require matched
+sampling settings. CI now runs on main pushes, retains evidence and scans the
+container. See [zero-budget-completion.md](zero-budget-completion.md).
+Focused regressions: 24 passed. Full fresh-environment suite: 505 passed and
+27 subtests, one existing warning. Scoped static/security checks passed. Results are recorded in
+completion-evidence/remaining-*. No paid provider calls were made. External
+reviews, real study/paper evidence and operator deployments remain required.
+
 ## Current checkpoint: 23 October 2026
 
 Completed source, matching lock, tests and evidence were committed together as

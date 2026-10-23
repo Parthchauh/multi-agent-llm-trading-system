@@ -15,7 +15,8 @@ def compare_architectures(reports: list[ExperimentReport]) -> dict:
         raise ValueError('Architecture treatments must be distinct.')
     reference = reports[0].experiment_config
     controlled_fields = ('provider', 'model', 'dataset_id', 'start', 'end', 'symbols',
-                         'seed', 'repetitions', 'information_set', 'transaction_costs', 'split_config', 'development_only')
+                         'seed', 'repetitions', 'information_set', 'transaction_costs', 'split_config', 'development_only',
+                         'model_settings', 'robustness_config', 'strategy_schema_version')
     rows, reference_datasets, reference_pairs = [], None, None
     for report in reports:
         config = report.experiment_config

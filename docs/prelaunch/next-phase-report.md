@@ -1,5 +1,10 @@
 # Completed work and next phase
 
+Latest implementation follow-up: [zero-budget-completion.md](zero-budget-completion.md).
+Study preregistration controls, local operational alerts and encrypted recovery
+are now implemented. These additions do not replace external review, real model
+evidence, elapsed paper observation, alert delivery or off-host storage drills.
+
 Checkpoint: 23 October 2026. Requested repository:
 https://github.com/Parthchauh/multi-agent-llm-trading-system.
 

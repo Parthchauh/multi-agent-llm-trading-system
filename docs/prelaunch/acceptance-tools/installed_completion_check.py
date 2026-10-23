@@ -13,6 +13,9 @@ import cli.research
 import data.provenance
 import data.snapshots
 import paper_trading.operations
+import research_service.encrypted_backups
+import research_service.monitoring
+import research_validation.study
 import scripts.run_research_e2e
 
 root = Path(__file__).resolve().parents[3]
@@ -20,7 +23,8 @@ outside = root/'.tools/project-completion'/('installed-outside-'+uuid.uuid4().he
 outside.mkdir(parents=True, exist_ok=False)
 evidence = root/'docs/prelaunch/completion-evidence'
 fixture = root/'.tools/project-completion/verified-fixture-final'
-modules = (cli.research, data.provenance, data.snapshots, paper_trading.operations, scripts.run_research_e2e)
+modules = (cli.research, data.provenance, data.snapshots, paper_trading.operations, scripts.run_research_e2e,
+           research_service.encrypted_backups, research_service.monitoring, research_validation.study)
 sources = {module.__name__: str(Path(module.__file__).resolve()) for module in modules}
 assert all(Path(path).is_relative_to(Path(sys.prefix)) for path in sources.values()), sources
 results = {'python': sys.executable, 'cwd': str(outside), 'installed_modules': sources,
@@ -50,7 +54,9 @@ canonical = executable/'trading-research.exe'
 for command in ('trading-research', 'tradingagents', 'tradingagents-legacy'):
     execute('installed-'+command, [executable/(command+'.exe'), '--help'])
 for command in ('snapshot-dataset', 'fold-research', 'freeze-candidate', 'simulate-paper',
-                'monitor-simulation', 'serve-evidence-api', 'backup-state', 'restore-state'):
+                'monitor-simulation', 'serve-evidence-api', 'backup-state', 'restore-state',
+                'register-study', 'assess-study', 'service-health', 'acknowledge-alert',
+                'encrypt-backup', 'restore-encrypted-backup'):
     execute('installed-help-'+command, [canonical, command, '--help'])
 execute('installed-fold-research', [canonical, 'fold-research', fixture/'development-prices.csv',
     fixture/'campaign-config.json', fixture/'recorded-responses.json', outside/'campaign.json'])
@@ -84,5 +90,15 @@ fixture_result = json.loads((outside/'recorded-e2e/fixture_result.json').read_te
 assert fixture_result['outcome_class'] == 'EXPECTED_RESEARCH_REJECTION'
 assert fixture_result['runtime_failure'] is False
 results['recorded_fixture_result'] = fixture_result
+remaining_code = ('import sys; sys.path.insert(0, '+repr(str(outside))+'); '
+                  'from pathlib import Path; from tests.remaining_work_fixture import run; run(Path("remaining-fixture"))')
+execute('installed-remaining-fixture', [sys.executable, '-I', '-c', remaining_code])
+remaining = json.loads((outside/'remaining-fixture/fixture-result.json').read_text())
+assert remaining['status'] == 'OFFLINE_RECORDED_FIXTURE_PASSED'
+assert remaining['actual_spend'] == 0 and remaining['persisted_alerts'] == 2
+execute('installed-register-study', [canonical, 'register-study', outside/'remaining-fixture/study-plan.json',
+                                   '--database', outside/'cli-studies.sqlite'])
+execute('installed-service-health', [canonical, 'service-health', '--database', outside/'cli-metrics.sqlite'])
+results['remaining_fixture_result'] = remaining
 (evidence/'installed-command-checks.json').write_text(json.dumps(results, indent=2), encoding='utf-8')
 print(json.dumps(results, indent=2))

@@ -5,6 +5,7 @@ import hashlib
 import json
 import re
 import sqlite3
+from contextlib import closing
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -34,8 +35,8 @@ def create_backup(destination: Path, sources: dict[str, Path]) -> dict:
         source = Path(source)
         sqlite = source.suffix.lower() in {'.sqlite', '.db', '.sqlite3'}
         if sqlite:
-            with sqlite3.connect(source.resolve().as_uri()+'?mode=ro', uri=True) as original:
-                with sqlite3.connect(target) as copied:
+            with closing(sqlite3.connect(source.resolve().as_uri()+'?mode=ro', uri=True)) as original:
+                with closing(sqlite3.connect(target)) as copied, copied:
                     original.backup(copied)
                     if copied.execute('PRAGMA integrity_check').fetchone()[0] != 'ok':
                         raise ValueError('Database backup integrity check failed.')
@@ -68,7 +69,7 @@ def restore_backup(source: Path, destination: Path) -> dict:
         if len(content) != entry['bytes'] or hashlib.sha256(content).hexdigest() != entry['sha256']:
             raise ValueError('Backup file integrity check failed.')
         if entry['sqlite']:
-            with sqlite3.connect(path.resolve().as_uri()+'?mode=ro', uri=True) as db:
+            with closing(sqlite3.connect(path.resolve().as_uri()+'?mode=ro', uri=True)) as db:
                 if db.execute('PRAGMA integrity_check').fetchone()[0] != 'ok':
                     raise ValueError('Backup database integrity check failed.')
         contents[entry['name']] = content
@@ -79,7 +80,7 @@ def restore_backup(source: Path, destination: Path) -> dict:
         path = destination/entry['name']
         path.write_bytes(contents[entry['name']])
         if entry['sqlite']:
-            with sqlite3.connect(path) as db:
+            with closing(sqlite3.connect(path)) as db, db:
                 if db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='sessions'").fetchone():
                     revoked += db.execute('SELECT COUNT(*) FROM sessions').fetchone()[0]
                     db.execute('DELETE FROM sessions')

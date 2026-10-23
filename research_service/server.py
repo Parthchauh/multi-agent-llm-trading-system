@@ -4,14 +4,16 @@ from __future__ import annotations
 import json
 import re
 import ssl
+import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
 from evaluation.platform import ResearchPlatformError, SQLiteResearchRepository
 from research_service.access import AccessStore
+from research_service.monitoring import ServiceMonitor
 
 
-def handler(access: AccessStore, repository: SQLiteResearchRepository):
+def handler(access: AccessStore, repository: SQLiteResearchRepository, monitor: ServiceMonitor | None = None):
     class ResearchHandler(BaseHTTPRequestHandler):
         server_version = 'ResearchEvidence'
         sys_version = ''
@@ -20,11 +22,17 @@ def handler(access: AccessStore, repository: SQLiteResearchRepository):
             super().setup()
             self.connection.settimeout(10)
 
+        def handle_one_request(self):
+            self.request_started = time.perf_counter()
+            super().handle_one_request()
+
         def log_message(self, *args):
             pass  # Access audit contains decisions, never credentials, tokens or bodies.
 
         def _reply(self, status, body):
             payload = json.dumps(body, allow_nan=False).encode()
+            if monitor is not None:
+                monitor.record(status, (time.perf_counter()-self.request_started)*1000)
             self.send_response(status)
             self.send_header('Content-Type', 'application/json; charset=utf-8')
             self.send_header('Content-Length', str(len(payload)))
@@ -88,12 +96,13 @@ def handler(access: AccessStore, repository: SQLiteResearchRepository):
 
 
 def serve(*, access_database: Path, research_database: Path, certificate: Path,
-          private_key: Path, port=8443):
+          private_key: Path, port=8443, metrics_database: Path | None = None):
     context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
     context.minimum_version = ssl.TLSVersion.TLSv1_2
     context.load_cert_chain(certificate, private_key)
     server = ThreadingHTTPServer(('127.0.0.1', port),
-        handler(AccessStore(access_database), SQLiteResearchRepository(research_database)))
+        handler(AccessStore(access_database), SQLiteResearchRepository(research_database),
+                ServiceMonitor(metrics_database or access_database.with_name('service-metrics.sqlite'))))
     server.socket = context.wrap_socket(server.socket, server_side=True)
     try:
         server.serve_forever()

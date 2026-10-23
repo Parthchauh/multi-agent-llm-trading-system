@@ -45,3 +45,12 @@ def test_comparison_refuses_changed_costs_and_missing_or_different_data(tmp_path
             update={'dataset_fingerprint': digest})})
         with pytest.raises(ValueError, match='fingerprint'):
             compare_architectures([values[0], changed])
+
+
+def test_comparison_rejects_unmatched_sampling_conditions(tmp_path):
+    values = reports(tmp_path)
+    config = values[1].experiment_config
+    altered = values[1].model_copy(update={'experiment_config': config.model_copy(update={
+        'model_settings': config.model_settings.model_copy(update={'temperature': 1.5})})})
+    with pytest.raises(ValueError, match='controlled'):
+        compare_architectures([values[0], altered])
