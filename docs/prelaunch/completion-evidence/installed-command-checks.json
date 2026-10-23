@@ -1,16 +1,16 @@
 {
-  "python": "D:\\TradingAgents\\.tools\\p0-acceptance\\clean-env\\Scripts\\python.exe",
-  "cwd": "D:\\TradingAgents\\.tools\\project-completion\\installed-outside-11ff8845",
+  "python": "D:\\TradingAgents\\.tools\\project-completion\\final-env\\Scripts\\python.exe",
+  "cwd": "D:\\TradingAgents\\.tools\\project-completion\\installed-outside-7f7bbfde",
   "installed_modules": {
-    "cli.research": "D:\\TradingAgents\\.tools\\p0-acceptance\\clean-env\\Lib\\site-packages\\cli\\research.py",
-    "data.provenance": "D:\\TradingAgents\\.tools\\p0-acceptance\\clean-env\\Lib\\site-packages\\data\\provenance.py",
-    "data.snapshots": "D:\\TradingAgents\\.tools\\p0-acceptance\\clean-env\\Lib\\site-packages\\data\\snapshots.py",
-    "paper_trading.operations": "D:\\TradingAgents\\.tools\\p0-acceptance\\clean-env\\Lib\\site-packages\\paper_trading\\operations.py",
-    "scripts.run_research_e2e": "D:\\TradingAgents\\.tools\\p0-acceptance\\clean-env\\Lib\\site-packages\\scripts\\run_research_e2e.py"
+    "cli.research": "D:\\TradingAgents\\.tools\\project-completion\\final-env\\Lib\\site-packages\\cli\\research.py",
+    "data.provenance": "D:\\TradingAgents\\.tools\\project-completion\\final-env\\Lib\\site-packages\\data\\provenance.py",
+    "data.snapshots": "D:\\TradingAgents\\.tools\\project-completion\\final-env\\Lib\\site-packages\\data\\snapshots.py",
+    "paper_trading.operations": "D:\\TradingAgents\\.tools\\project-completion\\final-env\\Lib\\site-packages\\paper_trading\\operations.py",
+    "scripts.run_research_e2e": "D:\\TradingAgents\\.tools\\project-completion\\final-env\\Lib\\site-packages\\scripts\\run_research_e2e.py"
   },
   "module_sha256": {
     "cli.research": "2ffc63f53cf06e2bcda78315b106bd02ffac3e95936595c46ae72501b8d59826",
-    "data.provenance": "e0e321ae1430bbad191c0600b8eafd955ec4a06aaeb38f84a4b25e905df64c55",
+    "data.provenance": "f10577b7463df7e0ec00e27d0868d053e09cf459e53d48ea3cbb9a27b905373e",
     "data.snapshots": "b3075333f94acb3d66ee903c7b9fd59670d2997403c562584ff692c338b1d8ca",
     "paper_trading.operations": "350a70f866bee76457e41b9e85a7e7f00e9ebd81208a7a1a6fb4f90c27ca87e7",
     "scripts.run_research_e2e": "f14fe7dc4ab43045cfbd1c60658ebf97750c1e37ce295da8a91c496b0db2db44"
@@ -18,28 +18,28 @@
   "commands": {
     "installed-trading-research": {
       "command": [
-        "D:\\TradingAgents\\.tools\\p0-acceptance\\clean-env\\Scripts\\trading-research.exe",
+        "D:\\TradingAgents\\.tools\\project-completion\\final-env\\Scripts\\trading-research.exe",
         "--help"
       ],
       "exit_code": 0
     },
     "installed-tradingagents": {
       "command": [
-        "D:\\TradingAgents\\.tools\\p0-acceptance\\clean-env\\Scripts\\tradingagents.exe",
+        "D:\\TradingAgents\\.tools\\project-completion\\final-env\\Scripts\\tradingagents.exe",
         "--help"
       ],
       "exit_code": 0
     },
     "installed-tradingagents-legacy": {
       "command": [
-        "D:\\TradingAgents\\.tools\\p0-acceptance\\clean-env\\Scripts\\tradingagents-legacy.exe",
+        "D:\\TradingAgents\\.tools\\project-completion\\final-env\\Scripts\\tradingagents-legacy.exe",
         "--help"
       ],
       "exit_code": 0
     },
     "installed-help-snapshot-dataset": {
       "command": [
-        "D:\\TradingAgents\\.tools\\p0-acceptance\\clean-env\\Scripts\\trading-research.exe",
+        "D:\\TradingAgents\\.tools\\project-completion\\final-env\\Scripts\\trading-research.exe",
         "snapshot-dataset",
         "--help"
       ],
@@ -47,7 +47,7 @@
     },
     "installed-help-fold-research": {
       "command": [
-        "D:\\TradingAgents\\.tools\\p0-acceptance\\clean-env\\Scripts\\trading-research.exe",
+        "D:\\TradingAgents\\.tools\\project-completion\\final-env\\Scripts\\trading-research.exe",
         "fold-research",
         "--help"
       ],
@@ -55,7 +55,7 @@
     },
     "installed-help-freeze-candidate": {
       "command": [
-        "D:\\TradingAgents\\.tools\\p0-acceptance\\clean-env\\Scripts\\trading-research.exe",
+        "D:\\TradingAgents\\.tools\\project-completion\\final-env\\Scripts\\trading-research.exe",
         "freeze-candidate",
         "--help"
       ],
@@ -63,7 +63,7 @@
     },
     "installed-help-simulate-paper": {
       "command": [
-        "D:\\TradingAgents\\.tools\\p0-acceptance\\clean-env\\Scripts\\trading-research.exe",
+        "D:\\TradingAgents\\.tools\\project-completion\\final-env\\Scripts\\trading-research.exe",
         "simulate-paper",
         "--help"
       ],
@@ -71,7 +71,7 @@
     },
     "installed-help-monitor-simulation": {
       "command": [
-        "D:\\TradingAgents\\.tools\\p0-acceptance\\clean-env\\Scripts\\trading-research.exe",
+        "D:\\TradingAgents\\.tools\\project-completion\\final-env\\Scripts\\trading-research.exe",
         "monitor-simulation",
         "--help"
       ],
@@ -79,7 +79,7 @@
     },
     "installed-help-serve-evidence-api": {
       "command": [
-        "D:\\TradingAgents\\.tools\\p0-acceptance\\clean-env\\Scripts\\trading-research.exe",
+        "D:\\TradingAgents\\.tools\\project-completion\\final-env\\Scripts\\trading-research.exe",
         "serve-evidence-api",
         "--help"
       ],
@@ -87,7 +87,7 @@
     },
     "installed-help-backup-state": {
       "command": [
-        "D:\\TradingAgents\\.tools\\p0-acceptance\\clean-env\\Scripts\\trading-research.exe",
+        "D:\\TradingAgents\\.tools\\project-completion\\final-env\\Scripts\\trading-research.exe",
         "backup-state",
         "--help"
       ],
@@ -95,7 +95,7 @@
     },
     "installed-help-restore-state": {
       "command": [
-        "D:\\TradingAgents\\.tools\\p0-acceptance\\clean-env\\Scripts\\trading-research.exe",
+        "D:\\TradingAgents\\.tools\\project-completion\\final-env\\Scripts\\trading-research.exe",
         "restore-state",
         "--help"
       ],
@@ -103,18 +103,18 @@
     },
     "installed-fold-research": {
       "command": [
-        "D:\\TradingAgents\\.tools\\p0-acceptance\\clean-env\\Scripts\\trading-research.exe",
+        "D:\\TradingAgents\\.tools\\project-completion\\final-env\\Scripts\\trading-research.exe",
         "fold-research",
         "D:\\TradingAgents\\.tools\\project-completion\\verified-fixture-final\\development-prices.csv",
         "D:\\TradingAgents\\.tools\\project-completion\\verified-fixture-final\\campaign-config.json",
         "D:\\TradingAgents\\.tools\\project-completion\\verified-fixture-final\\recorded-responses.json",
-        "D:\\TradingAgents\\.tools\\project-completion\\installed-outside-11ff8845\\campaign.json"
+        "D:\\TradingAgents\\.tools\\project-completion\\installed-outside-7f7bbfde\\campaign.json"
       ],
       "exit_code": 0
     },
     "installed-replay": {
       "command": [
-        "D:\\TradingAgents\\.tools\\p0-acceptance\\clean-env\\Scripts\\trading-research.exe",
+        "D:\\TradingAgents\\.tools\\project-completion\\final-env\\Scripts\\trading-research.exe",
         "verify-replay",
         "D:\\TradingAgents\\.tools\\project-completion\\verified-fixture-final\\replay.json",
         "--store",
@@ -124,40 +124,40 @@
     },
     "installed-snapshot": {
       "command": [
-        "D:\\TradingAgents\\.tools\\p0-acceptance\\clean-env\\Scripts\\trading-research.exe",
+        "D:\\TradingAgents\\.tools\\project-completion\\final-env\\Scripts\\trading-research.exe",
         "snapshot-dataset",
         "D:\\TradingAgents\\.tools\\project-completion\\verified-fixture-final\\development-prices.csv",
         "D:\\TradingAgents\\.tools\\project-completion\\verified-fixture-final\\dataset-identity.json",
         "--store",
-        "D:\\TradingAgents\\.tools\\project-completion\\installed-outside-11ff8845\\datasets"
+        "D:\\TradingAgents\\.tools\\project-completion\\installed-outside-7f7bbfde\\datasets"
       ],
       "exit_code": 0
     },
     "installed-freeze": {
       "command": [
-        "D:\\TradingAgents\\.tools\\p0-acceptance\\clean-env\\Scripts\\trading-research.exe",
+        "D:\\TradingAgents\\.tools\\project-completion\\final-env\\Scripts\\trading-research.exe",
         "freeze-candidate",
-        "D:\\TradingAgents\\.tools\\project-completion\\installed-outside-11ff8845\\candidate.json",
+        "D:\\TradingAgents\\.tools\\project-completion\\installed-outside-7f7bbfde\\candidate.json",
         "--registry",
-        "D:\\TradingAgents\\.tools\\project-completion\\installed-outside-11ff8845\\registry.sqlite"
+        "D:\\TradingAgents\\.tools\\project-completion\\installed-outside-7f7bbfde\\registry.sqlite"
       ],
       "exit_code": 0
     },
     "installed-canonical-smoke": {
       "command": [
-        "D:\\TradingAgents\\.tools\\p0-acceptance\\clean-env\\Scripts\\python.exe",
+        "D:\\TradingAgents\\.tools\\project-completion\\final-env\\Scripts\\python.exe",
         "-I",
         "-c",
-        "import sys,pytest; sys.path.insert(0, 'D:\\\\TradingAgents\\\\.tools\\\\project-completion\\\\installed-outside-11ff8845'); raise SystemExit(pytest.main([\"tests/test_research_cli.py::test_canonical_cli_runs_real_local_pipeline\",\"-q\",\"--basetemp=cli-tmp\",\"-p\",\"no:cacheprovider\"]))"
+        "import sys,pytest; sys.path.insert(0, 'D:\\\\TradingAgents\\\\.tools\\\\project-completion\\\\installed-outside-7f7bbfde'); raise SystemExit(pytest.main([\"tests/test_research_cli.py::test_canonical_cli_runs_real_local_pipeline\",\"-q\",\"--basetemp=cli-tmp\",\"-p\",\"no:cacheprovider\"]))"
       ],
       "exit_code": 0
     },
     "installed-recorded-e2e": {
       "command": [
-        "D:\\TradingAgents\\.tools\\p0-acceptance\\clean-env\\Scripts\\python.exe",
+        "D:\\TradingAgents\\.tools\\project-completion\\final-env\\Scripts\\python.exe",
         "-I",
         "-c",
-        "import sys; sys.path.insert(0, 'D:\\\\TradingAgents\\\\.tools\\\\project-completion\\\\installed-outside-11ff8845'); from tests.prelaunch_fixture import run_fixture; run_fixture(\"recorded-e2e\")"
+        "import sys; sys.path.insert(0, 'D:\\\\TradingAgents\\\\.tools\\\\project-completion\\\\installed-outside-7f7bbfde'); from tests.prelaunch_fixture import run_fixture; run_fixture(\"recorded-e2e\")"
       ],
       "exit_code": 0
     }
@@ -167,7 +167,7 @@
     "os": "Windows-11-10.0.22631-SP0",
     "git_commit": null,
     "working_tree_code_sha256": null,
-    "installed_project_code_sha256": "3be8597112cb31c5178d2a74629821c476815c6f44195a5bfbeeb35deacf055a",
+    "installed_project_code_sha256": "40caf66c7a92619f3d1cd923837622b9138e0ed55c9e08c14fa4e1caf2542871",
     "packages": {
       "numpy": "2.3.0",
       "pandas": "2.3.0",

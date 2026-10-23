@@ -1,7 +1,7 @@
 {
   "python": "3.13.9 | packaged by Anaconda, Inc. | (main, Oct 21 2025, 19:09:58) [MSC v.1929 64 bit (AMD64)]",
-  "executable": "D:\\TradingAgents\\.tools\\p0-acceptance\\clean-env\\Scripts\\python.exe",
-  "prefix": "D:\\TradingAgents\\.tools\\p0-acceptance\\clean-env",
+  "executable": "D:\\TradingAgents\\.tools\\project-completion\\final-env\\Scripts\\python.exe",
+  "prefix": "D:\\TradingAgents\\.tools\\project-completion\\final-env",
   "base_prefix": "C:\\Users\\cpart\\anaconda3",
   "installed_distributions": 161,
   "project_version": "0.2.3",

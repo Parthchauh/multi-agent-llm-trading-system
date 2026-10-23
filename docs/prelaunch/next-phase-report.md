@@ -13,10 +13,11 @@ telemetry, dataset snapshots/replay, immutable registry, persistent simulation,
 kill/drift controls, TLS evidence API with tenant authorization, backup/restore,
 evidence pages, locked dependencies, CI recipes, security checks and runbooks.
 
-The preceding full non-live suite passed 492 tests and 27 subtests. Scoped
-static/security checks and recorded safe-rejection fixtures passed. A fresh
-non-editable environment is installed at `.tools/project-completion/final-env`;
-its final verification is being recorded separately. Earlier failed attempts
+The fresh full non-live suite passed 492 tests and 27 subtests (270.32 seconds,
+one existing UTC deprecation warning). Scoped static/security checks and recorded
+safe-rejection fixtures passed. The fresh non-editable environment is
+`.tools/project-completion/final-env`; installed console commands, canonical
+smoke and recorded E2E passed outside the source tree. Earlier failed attempts
 remain evidence rather than being overwritten or represented as passes.
 
 ## Pending against the guide
@@ -34,15 +35,16 @@ remain evidence rather than being overwritten or represented as passes.
 
 ## Next bounded package
 
-First finish fresh installed-environment acceptance and commit its actual results.
-Then prepare a predeclared research study with fixed datasets, model versions,
+Fresh installed-environment acceptance is complete; see completion-evidence/oct23-*
+and installed-command-checks.json. Next prepare a predeclared research study with fixed datasets, model versions,
 seeds, search/cost budgets, selection rules and independent review criteria.
 Run it only once the licensed inputs, provider access and spending scope are
 available. Keep confirmatory data sealed until its permitted stage and preserve
 the persistent campaign ledger. Do not infer certification from diagnostics.
 
 Statistical certification, paper promotion and broker execution remain disabled.
-No push, merge, deployment or host-service change is authorized by this commit.
+Commit `7b7a2cb` was pushed to origin/main after the user explicitly requested it.
+No merge, deployment or host-service change occurred.
 The unrelated presentation and runtime research.sqlite are preserved outside the
 source commit. See project-completion-review.md and p0-acceptance-review.md for
 detailed evidence and limits. No independent review is claimed.

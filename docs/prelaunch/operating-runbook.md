@@ -9,9 +9,9 @@ Do not expose the unauthenticated local dashboard through a public proxy.
 From the repository root in PowerShell, use a separate environment:
 
 ```powershell
-$env:UV_PROJECT_ENVIRONMENT='D:\TradingAgents\.tools\p0-acceptance\clean-env'
+$env:UV_PROJECT_ENVIRONMENT='D:\TradingAgents\.tools\project-completion\final-env'
 .\.tools\uv\bin\uv.exe sync --locked --extra dev --extra audit --no-editable --python .venv\Scripts\python.exe --cache-dir .tools\uv-cache
-.\.tools\p0-acceptance\clean-env\Scripts\python.exe -m scripts.verify_prelaunch --output NEW_VERIFICATION_DIRECTORY --online-audit
+.\.tools\project-completion\final-env\Scripts\python.exe -m scripts.verify_prelaunch --output NEW_VERIFICATION_DIRECTORY --online-audit
 ```
 
 The verification destination must be new. The existing `.venv` remains untouched.

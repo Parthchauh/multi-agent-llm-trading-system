@@ -17,19 +17,19 @@ Provider: in_memory
     "evidence_state": "INSUFFICIENT_EVIDENCE",
     "real_money_execution": false
   },
-  "output": "D:\\TradingAgents\\.tools\\project-completion\\installed-outside-11ff8845\\recorded-e2e"
+  "output": "D:\\TradingAgents\\.tools\\project-completion\\installed-outside-7f7bbfde\\recorded-e2e"
 }
-2026-10-22 14:44:27,906 [INFO] run_research_e2e: === PHASE 1: PRE-FLIGHT INITIALIZATION ===
-2026-10-22 14:44:27,906 [INFO] run_research_e2e: Run ID: e2e_AAA_20261022_144427 | Symbol: AAA | Mode: SINGLE_AGENT
-2026-10-22 14:44:27,906 [INFO] run_research_e2e: === PHASE 5: DATA ACQUISITION & VALIDATION ===
-2026-10-22 14:44:28,174 [INFO] run_research_e2e: === PHASE 6: LLM CLIENT CONFIGURATION ===
-2026-10-22 14:44:28,242 [INFO] run_research_e2e: === PHASE 7-11: RESEARCH LIFECYCLE EXECUTION ===
-2026-10-22 14:44:28,309 [INFO] tradingagents.graph.research_graph: research_event stage=load_data outcome=succeeded
-2026-10-22 14:44:28,340 [INFO] tradingagents.graph.research_graph: research_event stage=compute_regime outcome=succeeded
-2026-10-22 14:44:28,342 [INFO] tradingagents.graph.research_graph: research_event stage=analyze_regime outcome=succeeded
-2026-10-22 14:44:28,351 [INFO] tradingagents.graph.research_graph: research_event stage=generate_strategy outcome=succeeded
-2026-10-22 14:44:28,353 [INFO] tradingagents.graph.research_graph: research_event stage=validate_strategy outcome=succeeded
-2026-10-22 14:44:28,381 [INFO] tradingagents.graph.research_graph: research_event stage=compile_strategy outcome=succeeded
-2026-10-22 14:44:28,414 [INFO] tradingagents.graph.research_graph: research_event stage=backtest outcome=succeeded
-2026-10-22 14:44:28,453 [INFO] run_research_e2e: Lifecycle completed with status: VIABILITY_REJECTED
-2026-10-22 14:44:28,521 [INFO] run_research_e2e: === PHASE 13: BASELINE COMPARISONS ===
+2026-10-23 16:32:57,769 [INFO] run_research_e2e: === PHASE 1: PRE-FLIGHT INITIALIZATION ===
+2026-10-23 16:32:57,769 [INFO] run_research_e2e: Run ID: e2e_AAA_20261023_163257 | Symbol: AAA | Mode: SINGLE_AGENT
+2026-10-23 16:32:57,769 [INFO] run_research_e2e: === PHASE 5: DATA ACQUISITION & VALIDATION ===
+2026-10-23 16:32:57,907 [INFO] run_research_e2e: === PHASE 6: LLM CLIENT CONFIGURATION ===
+2026-10-23 16:32:57,997 [INFO] run_research_e2e: === PHASE 7-11: RESEARCH LIFECYCLE EXECUTION ===
+2026-10-23 16:32:58,107 [INFO] tradingagents.graph.research_graph: research_event stage=load_data outcome=succeeded
+2026-10-23 16:32:58,213 [INFO] tradingagents.graph.research_graph: research_event stage=compute_regime outcome=succeeded
+2026-10-23 16:32:58,219 [INFO] tradingagents.graph.research_graph: research_event stage=analyze_regime outcome=succeeded
+2026-10-23 16:32:58,263 [INFO] tradingagents.graph.research_graph: research_event stage=generate_strategy outcome=succeeded
+2026-10-23 16:32:58,268 [INFO] tradingagents.graph.research_graph: research_event stage=validate_strategy outcome=succeeded
+2026-10-23 16:32:58,330 [INFO] tradingagents.graph.research_graph: research_event stage=compile_strategy outcome=succeeded
+2026-10-23 16:32:58,439 [INFO] tradingagents.graph.research_graph: research_event stage=backtest outcome=succeeded
+2026-10-23 16:32:58,688 [INFO] run_research_e2e: Lifecycle completed with status: VIABILITY_REJECTED
+2026-10-23 16:32:58,959 [INFO] run_research_e2e: === PHASE 13: BASELINE COMPARISONS ===

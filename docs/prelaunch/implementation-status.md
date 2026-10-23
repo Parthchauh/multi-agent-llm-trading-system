@@ -1,5 +1,17 @@
 # Prelaunch implementation status
 
+## Current checkpoint: 23 October 2026
+
+Completed source, matching lock, tests and evidence were committed together as
+`7b7a2cb`. The historical entries below describe their original checkpoints;
+their statements about uncommitted work are not the current Git state.
+See [next-phase-report.md](next-phase-report.md) for the current guide comparison.
+The fresh verification environment is `.tools/project-completion/final-env`.
+The user subsequently authorized pushing to origin/main; that push succeeded.
+Fresh verification passed 492 tests and 27 subtests, all scoped checks, installed
+commands and recorded fixtures. No merge or deployment occurred. Certification, paper promotion and broker
+execution remain disabled; external evidence and independent review remain open.
+
 Baseline commit: `79f2411b56ee24793abb2a42214674f8d80eeac8`, branch `main`.
 Existing user work was preserved. No commit, tag, push, merge, deployment, or
 real-money action was performed. This is a P0 implementation checkpoint, not

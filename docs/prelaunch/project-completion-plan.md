@@ -21,7 +21,7 @@ licensed point-in-time data, and external legal/provider approvals.
 | U | Structured strategy/evidence/risk/provenance pages over persisted authoritative reports | LOCAL_IMPLEMENTATION_VERIFIED | Missing facts remain unavailable; local dashboard is read-only and loopback-only |
 | L | Attribution, dependency inventory, methodology, release and operations runbooks | DOCUMENTED_EXTERNAL_REVIEW_REQUIRED | Human NOTICE/provider/data/model/jurisdiction approvals not fabricated |
 
-Use the existing `.tools/p0-acceptance/clean-env` for isolated verification and
+Use `.tools/project-completion/final-env` for isolated verification and
 leave `.venv` unchanged. Record actual commands and results in completion-evidence.
 Update this file and implementation-status.md at each package boundary. No task
 is complete merely because an implementation file exists.
