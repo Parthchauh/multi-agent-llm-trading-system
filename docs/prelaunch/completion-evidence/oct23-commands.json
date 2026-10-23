@@ -124,5 +124,19 @@
     ],
     "exit_code": 0,
     "seconds": 3.374
+  },
+  "sbom": {
+    "command": [
+      "D:\\TradingAgents\\.tools\\project-completion\\final-env\\Scripts\\python.exe",
+      "-m",
+      "cyclonedx_py",
+      "environment",
+      "--of",
+      "JSON",
+      "--output-file",
+      ".tools\\project-completion\\verification-commit-oct23\\sbom.json"
+    ],
+    "exit_code": 0,
+    "seconds": 118.168
   }
 }
