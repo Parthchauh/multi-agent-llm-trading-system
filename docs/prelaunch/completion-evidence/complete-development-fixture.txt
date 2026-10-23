@@ -1,0 +1,85 @@
+{
+  "outcome_class": "DEVELOPMENT_RESEARCH_FIXTURE",
+  "runtime_failure": false,
+  "replay": {
+    "status": "REPLAY_MATCH",
+    "result_sha256": "9c35bd77797bde2373be17234841a5866c41a5e03605a968cd2a80b526d51b3b",
+    "environment_match": true,
+    "environment_mismatches": [],
+    "statistical_certification": false,
+    "paper_eligible": false
+  },
+  "folds": 3,
+  "attempts": 9,
+  "simulation": {
+    "mode": "LOCAL_SIMULATION_ONLY",
+    "suspended": true,
+    "incidents": [
+      {
+        "incident_id": "59a4dedac83a4226bb16edb237759a6c",
+        "reason": "OPERATOR_KILL_SWITCH",
+        "recorded_at": "2026-10-22T09:15:02.304833+00:00"
+      }
+    ],
+    "accepted_bars": 6,
+    "observed_sessions": [
+      "2020-03-25T00:00:00+00:00",
+      "2020-03-26T00:00:00+00:00",
+      "2020-03-27T00:00:00+00:00",
+      "2020-03-30T00:00:00+00:00",
+      "2020-03-31T00:00:00+00:00",
+      "2020-04-01T00:00:00+00:00"
+    ],
+    "paper_eligible": false,
+    "last_response": {
+      "drawdown_pct": 0.0,
+      "duplicate": false,
+      "exposure_pct": 9.527215483101998,
+      "fills": [],
+      "max_loss_per_trade_pct": 0.0,
+      "paper_eligible": false,
+      "runtime_failure": false,
+      "snapshot": {
+        "cash": 9054.0906,
+        "holdings_value": 953.4389,
+        "open_positions_count": 1,
+        "realized_pnl": 0.0,
+        "timestamp": "2020-04-01T00:00:00Z",
+        "total_equity": 10007.5295,
+        "unrealized_pnl": 7.5295
+      },
+      "status": "SIMULATED",
+      "suspended": false,
+      "turnover_pct": 9.449644465772215
+    }
+  },
+  "backup_sha256": "56a3f534bff981c086a747b474f5dedd469e928f0a8b1a05423ec3ba265aac38",
+  "restore": {
+    "status": "RESTORE_VERIFIED",
+    "backup_sha256": "56a3f534bff981c086a747b474f5dedd469e928f0a8b1a05423ec3ba265aac38",
+    "files": 4,
+    "sessions_revoked": 0,
+    "paper_eligible": false
+  },
+  "drift": {
+    "policy": {
+      "window": 30,
+      "minimum_completed_trades": 20,
+      "maximum_mean_bar_return_gap_pct": 0.5,
+      "maximum_drawdown_gap_pct": 5.0
+    },
+    "observations": 6,
+    "completed_trades": 0,
+    "paper_eligible": false,
+    "limitations": [
+      "Thresholds are research policy defaults, not validated investment limits.",
+      "Distribution comparison does not establish statistical certification."
+    ],
+    "status": "INSUFFICIENT_EVIDENCE",
+    "mode": "LOCAL_SIMULATION_ONLY"
+  },
+  "statistical_certification": false,
+  "paper_eligible": false,
+  "real_money_eligible": false,
+  "historical_untouched_baseline": false
+}

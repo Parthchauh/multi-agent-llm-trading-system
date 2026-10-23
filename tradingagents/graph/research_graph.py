@@ -7,7 +7,6 @@ from collections.abc import Callable
 from datetime import datetime, timezone
 from typing import Any
 
-import pandas as pd
 from langgraph.graph import END, START, StateGraph
 
 from backtesting.engine import BacktestEngine
@@ -365,7 +364,7 @@ class Sprint4ResearchGraph:
         backtest_config: BacktestConfig,
     ) -> ResearchRunResult:
         generation = dataset_split.generation_view()
-        development = dataset_split.development_view()
+        development = dataset_split.adaptive_view()
         context_data = generation.context.observations
         evaluation_data = development.validation.feature_frame
         split_id = ":".join(

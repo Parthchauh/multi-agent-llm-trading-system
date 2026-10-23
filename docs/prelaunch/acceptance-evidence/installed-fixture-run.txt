@@ -1,0 +1,38 @@
+D:\TradingAgents\.tools\p0-acceptance\clean-env\Lib\site-packages\langgraph\cache\base\__init__.py:8: LangChainPendingDeprecationWarning: The default value of `allowed_objects` will change in a future version. Pass an explicit value (e.g., allowed_objects='messages' or allowed_objects='core') to suppress this warning.
+  from langgraph.checkpoint.serde.jsonplus import JsonPlusSerializer
+2026-10-20 14:44:25,338 [INFO] run_research_e2e: === PHASE 1: PRE-FLIGHT INITIALIZATION ===
+2026-10-20 14:44:25,340 [INFO] run_research_e2e: Run ID: e2e_AAA_20261020_144425 | Symbol: AAA | Mode: SINGLE_AGENT
+2026-10-20 14:44:25,341 [INFO] run_research_e2e: === PHASE 5: DATA ACQUISITION & VALIDATION ===
+2026-10-20 14:44:25,413 [INFO] run_research_e2e: === PHASE 6: LLM CLIENT CONFIGURATION ===
+2026-10-20 14:44:25,438 [INFO] run_research_e2e: === PHASE 7-11: RESEARCH LIFECYCLE EXECUTION ===
+2026-10-20 14:44:25,462 [INFO] tradingagents.graph.research_graph: research_event stage=load_data outcome=succeeded
+2026-10-20 14:44:25,488 [INFO] tradingagents.graph.research_graph: research_event stage=compute_regime outcome=succeeded
+2026-10-20 14:44:25,489 [INFO] tradingagents.graph.research_graph: research_event stage=analyze_regime outcome=succeeded
+2026-10-20 14:44:25,497 [INFO] tradingagents.graph.research_graph: research_event stage=generate_strategy outcome=succeeded
+2026-10-20 14:44:25,498 [INFO] tradingagents.graph.research_graph: research_event stage=validate_strategy outcome=succeeded
+2026-10-20 14:44:25,517 [INFO] tradingagents.graph.research_graph: research_event stage=compile_strategy outcome=succeeded
+2026-10-20 14:44:25,537 [INFO] tradingagents.graph.research_graph: research_event stage=backtest outcome=succeeded
+2026-10-20 14:44:25,573 [INFO] run_research_e2e: Lifecycle completed with status: VIABILITY_REJECTED
+2026-10-20 14:44:25,621 [INFO] run_research_e2e: === PHASE 13: BASELINE COMPARISONS ===
+Installed runner: D:\TradingAgents\.tools\p0-acceptance\clean-env\Lib\site-packages\scripts\run_research_e2e.py
+
+--- DATA VALIDATION SUMMARY ---
+Symbol: AAA
+Rows: 350
+First timestamp: 2020-01-02 00:00:00
+Last timestamp: 2021-05-05 00:00:00
+Provider: in_memory
+
+{
+  "status": "VIABILITY_REJECTED",
+  "certification": {
+    "TECHNICALLY_VALID": true,
+    "STATISTICALLY_VIABLE": false,
+    "RISK_ACCEPTED": false,
+    "DEPLOYMENT_ELIGIBLE": false,
+    "performance_screening_passed": false,
+    "evidence_state": "INSUFFICIENT_EVIDENCE",
+    "real_money_execution": false
+  },
+  "output": "D:\\TradingAgents\\.tools\\p0-acceptance\\outside\\fixture"
+}

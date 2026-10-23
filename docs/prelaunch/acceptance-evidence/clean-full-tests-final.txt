@@ -1,0 +1,18 @@
+..................................................................... [ 16%]
+................................................ [ 27%]
+........................................................................ [ 44%]
+........................................................................ [ 61%]
+........................................................................ [ 77%]
+........................................................................ [ 94%]
+......................                                                   [100%]
+============================== warnings summary ===============================
+.tools\p0-acceptance\clean-env\Lib\site-packages\langgraph\cache\base\__init__.py:8
+  D:\TradingAgents\.tools\p0-acceptance\clean-env\Lib\site-packages\langgraph\cache\base\__init__.py:8: LangChainPendingDeprecationWarning: The default value of `allowed_objects` will change in a future version. Pass an explicit value (e.g., allowed_objects='messages' or allowed_objects='core') to suppress this warning.
+    from langgraph.checkpoint.serde.jsonplus import JsonPlusSerializer
+
+tests/test_sprint35_data_split.py::TestHoldoutAccessControl::test_frozen_selection_requires_non_empty_id
+  D:\TradingAgents\tests\test_sprint35_data_split.py:92: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    frozen_at=__import__("datetime").datetime.utcnow(),
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+427 passed, 2 warnings, 27 subtests passed in 117.00s (0:01:56)

@@ -1,0 +1,5 @@
+Using CPython 3.13.9 interpreter at: .venv\Scripts\python.exe
+Resolved 134 packages in 2.84s
+error: The lockfile at `uv.lock` needs to be updated, but `--check` was provided.
+
+hint: To update the lockfile, run `uv lock`.

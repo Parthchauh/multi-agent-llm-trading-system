@@ -9,6 +9,7 @@ authoritative research pipeline.
 from __future__ import annotations
 
 import json
+import socket
 from collections.abc import Callable
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -22,6 +23,7 @@ from evaluation.platform import (
     SQLiteResearchRepository,
     report_markdown,
 )
+from research_dashboard.views import EVIDENCE_HTML, evidence_payload
 
 
 class ResearchDashboardServer(ThreadingHTTPServer):
@@ -40,6 +42,12 @@ class ResearchDashboardServer(ThreadingHTTPServer):
         super().__init__(server_address, handler_class)
 
 
+class _IPv6ResearchDashboardServer(ResearchDashboardServer):
+    """Loopback-only IPv6 variant used when callers explicitly request ``::1``."""
+
+    address_family = socket.AF_INET6
+
+
 class _DashboardHandler(BaseHTTPRequestHandler):
     """Serve local report data and a compact browser interface."""
 
@@ -55,6 +63,17 @@ class _DashboardHandler(BaseHTTPRequestHandler):
             return
         if path == "/api/experiments":
             self._send_json([_report_summary(report) for report in self.server.repository.list_reports()])
+            return
+        if path.startswith('/evidence/'):
+            self._send_html(EVIDENCE_HTML)
+            return
+        if path.startswith('/api/evidence/'):
+            try:
+                report = self.server.repository.load_report(unquote(path.removeprefix('/api/evidence/')))
+            except ResearchPlatformError:
+                self._send_json({'error': 'not_found'}, status=HTTPStatus.NOT_FOUND)
+                return
+            self._send_json(evidence_payload(report))
             return
         if path.startswith("/api/experiments/"):
             experiment_id = unquote(path.removeprefix("/api/experiments/"))
@@ -129,7 +148,10 @@ def create_dashboard_server(
     if not 0 <= port <= 65_535:
         raise ValueError("port must be between 0 and 65535.")
     repository = SQLiteResearchRepository(database)
-    return ResearchDashboardServer((host, port), _DashboardHandler, repository=repository)
+    server_type: type[ResearchDashboardServer] = (
+        _IPv6ResearchDashboardServer if host == "::1" else ResearchDashboardServer
+    )
+    return server_type((host, port), _DashboardHandler, repository=repository)
 
 
 def serve_dashboard(
@@ -141,9 +163,16 @@ def serve_dashboard(
 ) -> None:
     """Run the local read-only dashboard until the user interrupts it."""
 
-    server = create_dashboard_server(database, host=host, port=port)
+    try:
+        server = create_dashboard_server(database, host=host, port=port)
+    except OSError as exc:
+        raise RuntimeError(
+            f"Could not start the local research dashboard on {host}:{port}. "
+            "The address may already be in use; choose another --port value."
+        ) from exc
     address, resolved_port = server.server_address[:2]
-    announce(f"Research dashboard: http://{address}:{resolved_port}")
+    display_address = f"[{address}]" if ":" in address else address
+    announce(f"Research dashboard: http://{display_address}:{resolved_port}")
     try:
         server.serve_forever()
     finally:
@@ -161,7 +190,12 @@ def _report_summary(report: ExperimentReport) -> dict[str, Any]:
         "runs": len(report.runs),
         "completed_runs": completed,
         "failed_runs": len(report.failures),
+        'certifications': [
+            {'run_id': run.run_id, 'statuses': run.result.get('certification', {})}
+            for run in report.runs
+        ],
         "report_json_url": f"/api/experiments/{quote(experiment_id, safe='')}",
+        "evidence_url": f"/evidence/{quote(experiment_id, safe='')}",
         "report_markdown_url": f"/reports/{quote(experiment_id, safe='')}.md",
     }
 
@@ -189,12 +223,24 @@ _DASHBOARD_HTML = """<!doctype html>
   <p class="notice">LLM interpretations are not execution authority. All shown results originate from validated deterministic research runs.</p>
   <table><thead><tr><th>Experiment</th><th>Architecture</th><th>Dataset</th><th>Runs</th><th>Failures</th><th>Reports</th></tr></thead>
   <tbody id="experiments"><tr><td colspan="6">Loading reports…</td></tr></tbody></table>
+  <h2>Certification evidence</h2>
+  <p>Performance screening and completed research runs do not establish paper-trading eligibility.</p>
+  <section id="certifications"></section>
   <script>
     const cell = (value) => { const node = document.createElement('td'); node.textContent = value; return node; };
     fetch('/api/experiments').then(response => response.json()).then(reports => {
       const body = document.getElementById('experiments'); body.replaceChildren();
       if (!reports.length) { const row = document.createElement('tr'); const empty = cell('No persisted experiment reports yet.'); empty.colSpan = 6; row.append(empty); body.append(row); return; }
-      reports.forEach(report => { const row = document.createElement('tr'); row.append(cell(report.experiment_id), cell(report.architecture), cell(report.dataset_id), cell(`${report.completed_runs}/${report.runs}`), cell(report.failed_runs)); const links = document.createElement('td'); const json = document.createElement('a'); json.href = report.report_json_url; json.textContent = 'JSON'; const markdown = document.createElement('a'); markdown.href = report.report_markdown_url; markdown.textContent = 'Markdown'; links.append(json, document.createTextNode(' · '), markdown); row.append(links); body.append(row); });
+      reports.forEach(report => { const row = document.createElement('tr'); row.append(cell(report.experiment_id), cell(report.architecture), cell(report.dataset_id), cell(`${report.completed_runs}/${report.runs}`), cell(report.failed_runs)); const links = document.createElement('td'); const json = document.createElement('a'); json.href = report.report_json_url; json.textContent = 'JSON'; const markdown = document.createElement('a'); markdown.href = report.report_markdown_url; markdown.textContent = 'Markdown'; const details = document.createElement('a'); details.href = report.evidence_url; details.textContent = 'Evidence'; links.append(json, document.createTextNode(' · '), markdown, document.createTextNode(' · '), details); row.append(links); body.append(row); });
+      const evidence = document.getElementById('certifications');
+      reports.forEach(report => (report.certifications || []).forEach(run => {
+        const heading = document.createElement('h3'); heading.textContent = run.run_id; evidence.append(heading);
+        ['TECHNICALLY_VALID', 'STATISTICALLY_VIABLE', 'RISK_ACCEPTED', 'DEPLOYMENT_ELIGIBLE'].forEach(key => {
+          const line = document.createElement('p'); const value = run.statuses[key];
+          line.textContent = `${key}: ${value === true ? 'PASS' : value === false ? 'NOT ESTABLISHED' : 'UNAVAILABLE'}`;
+          evidence.append(line);
+        });
+      }));
     }).catch(() => { document.getElementById('experiments').innerHTML = '<tr><td colspan="6">Unable to load reports.</td></tr>'; });
   </script>
 </main></body></html>"""

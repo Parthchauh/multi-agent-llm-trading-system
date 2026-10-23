@@ -1,0 +1,14 @@
+                                                                               
+ Usage: trading-research freeze-candidate [OPTIONS] MANIFEST                   
+                                                                               
+ Freeze strategy/config/risk/evidence identities. Paper promotion remains      
+ disabled.                                                                     
+                                                                               
+┌─ Arguments ─────────────────────────────────────────────────────────────────┐
+│ *    manifest      PATH  [required]                                         │
+└─────────────────────────────────────────────────────────────────────────────┘
+┌─ Options ───────────────────────────────────────────────────────────────────┐
+│ --registry        PATH  [default: results\registry.sqlite]                  │
+│ --help                  Show this message and exit.                         │
+└─────────────────────────────────────────────────────────────────────────────┘
+

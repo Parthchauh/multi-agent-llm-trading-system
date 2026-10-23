@@ -258,6 +258,8 @@ class RiskAssessment(_FrozenStrictModel):
     violations: tuple[RiskViolation, ...] = ()
     warnings: tuple[str, ...] = ()
     metrics: RiskMetrics
+    policy_id: str | None = None
+    policy_sha256: str | None = None
 
     @field_validator("warnings")
     @classmethod

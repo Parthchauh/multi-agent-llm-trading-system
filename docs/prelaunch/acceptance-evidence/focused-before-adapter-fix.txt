@@ -1,0 +1,83 @@
+.................F........                                               [100%]
+================================== FAILURES ===================================
+_________ test_successful_confirmatory_path_does_not_certify_release __________
+
+tmp_path = WindowsPath('D:/TradingAgents/.test_tmp_acceptance_red/test_successful_confirmatory_p0')
+
+    def test_successful_confirmatory_path_does_not_certify_release(tmp_path):
+        import json
+    
+        import numpy as np
+    
+        from scripts.run_research_e2e import run_e2e_research
+        from tests.test_research_e2e import MockLifecycleClient
+    
+        count = 1000
+        base = 100.0 + np.arange(count) * 0.1
+        frame = pd.DataFrame(
+            {
+                "Open": base,
+                "High": base + 0.2,
+                "Low": base - 0.1,
+                "Close": base + 0.1,
+                "Volume": [10000.0] * count,
+            },
+            index=pd.date_range("2020-01-01", periods=count, freq="B"),
+        )
+        strategy = make_simple_strategy(
+            entry_indicator="close",
+            entry_operator=">",
+            entry_value=0.0,
+            exit_indicator="close",
+            exit_operator="<",
+            exit_value=0.0,
+            max_holding_days=1,
+            position_size_pct=10.0,
+        )
+        ledger = tmp_path / "campaign.sqlite"
+        outputs = []
+        for number in range(2):
+            output = tmp_path / str(number)
+>           result = run_e2e_research(
+                symbol="AAA",
+                df=frame,
+                commission=0.0,
+                slippage=0.0,
+                structured_client=MockLifecycleClient(raw_strategy=strategy.model_dump(mode="json")),
+                mode="SINGLE_AGENT",
+                output_dir=output,
+                exposure_ledger_path=ledger,
+                campaign_id=f"campaign-{number}",
+            )
+
+tests\test_prelaunch.py:297: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+scripts\run_research_e2e.py:361: in run_e2e_research
+    lifecycle_result: Sprint6RunResult = lifecycle.run(
+tradingagents\graph\sprint6_lifecycle.py:250: in run
+    initial = self.initial_graph.run(
+tradingagents\graph\research_graph.py:368: in run
+    development = dataset_split.development_view()
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <data.research_split.ResearchDatasetSplit object at 0x000001EEA89EED40>
+
+    def development_view(self) -> ResearchDevelopmentView:
+        if not self._legacy_access:
+>           raise ResearchSplitError('Unrestricted development_view requires explicit legacy_access=True; use adaptive_view.')
+E           data.research_split.ResearchSplitError: Unrestricted development_view requires explicit legacy_access=True; use adaptive_view.
+
+data\research_split.py:223: ResearchSplitError
+---------------------------- Captured stdout call -----------------------------
+
+--- DATA VALIDATION SUMMARY ---
+Symbol: AAA
+Rows: 1000
+First timestamp: 2020-01-01 00:00:00
+Last timestamp: 2023-10-31 00:00:00
+Provider: in_memory
+
+=========================== short test summary info ===========================
+FAILED tests/test_prelaunch.py::test_successful_confirmatory_path_does_not_certify_release
+1 failed, 25 passed in 17.23s

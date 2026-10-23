@@ -1,5 +1,14 @@
 .git
 .venv
+.tools
+.test_tmp*
+.pytest_cache
+.ruff_cache
+.mypy_cache
+*.sqlite*
+*.db
+*.pptx
+docs/prelaunch/completion-evidence
 .env
 .claude
 .idea

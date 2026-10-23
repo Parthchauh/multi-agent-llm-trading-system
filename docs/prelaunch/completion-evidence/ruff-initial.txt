@@ -1,0 +1,21 @@
+E731 Do not assign a `lambda` expression, use a `def`
+  --> tests\test_service_access.py:12:5
+   |
+11 | def test_roles_tenant_isolation_and_revoke_survive_restart(tmp_path):
+12 |     clock = lambda: 1000.
+   |     ^^^^^^^^^^^^^^^^^^^^^
+13 |     access = AccessStore(tmp_path/'access.sqlite', clock=clock)
+14 |     access.claim_resource('alpha-report', 'alpha')
+   |
+help: Rewrite `clock` as a `def`
+   |
+11 | def test_roles_tenant_isolation_and_revoke_survive_restart(tmp_path):
+   -     clock = lambda: 1000.
+12 +     def clock():
+13 +         return 1000.
+14 |     access = AccessStore(tmp_path/'access.sqlite', clock=clock)
+   |
+note: This is an unsafe fix and may change runtime behavior
+
+Found 8 errors (7 fixed, 1 remaining).
+1 unsafe fix available with `--fix --unsafe-fixes`.

@@ -1,0 +1,66 @@
+.......F.......                                                          [100%]
+================================== FAILURES ===================================
+________ test_review_and_refinement_finish_before_confirmatory_access _________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000014E9C947490>
+tmp_path = WindowsPath('D:/TradingAgents/.test_tmp_acceptance_review2/test_review_and_refinement_fin0')
+caplog = <_pytest.logging.LogCaptureFixture object at 0x0000014EABA43B60>
+
+    def test_review_and_refinement_finish_before_confirmatory_access(monkeypatch, tmp_path, caplog):
+        import numpy as np
+        import pandas as pd
+    
+        base = 100. + np.arange(1000)*.1
+        frame = pd.DataFrame({'Open': base, 'Close': base+.1, 'High': base+.2,
+                              'Low': base-.1, 'Volume': [10000.]*1000},
+                             index=pd.date_range('2020-01-01', periods=1000, freq='B'))
+        frame.iloc[700:, frame.columns.get_indexer(['Open', 'Close'])] = 932871013.
+        frame.iloc[700:, frame.columns.get_indexer(['High'])] = 932871014.
+        frame.iloc[700:, frame.columns.get_indexer(['Low'])] = 932871012.
+        strategy = make_simple_strategy(entry_indicator='close', entry_operator='>', entry_value=0.,
+            exit_indicator='close', exit_operator='<', exit_value=0., max_holding_days=1,
+            position_size_pct=10.)
+        client = MockLifecycleClient(raw_strategy=strategy.model_dump(mode='json'))
+        invoke = client.invoke
+        release = ResearchDatasetSplit.release_confirmatory_test
+        released = False
+    
+        def guarded_invoke(schema, messages):
+            assert not released, 'An adaptive agent was called after test access.'
+            assert '93287101' not in json.dumps(messages)
+            return invoke(schema, messages)
+    
+        def guarded_release(split, selection, **kwargs):
+            nonlocal released
+            assert len(client.calls) == 9  # Includes bull/bear, critic, and refiner.
+            partition = release(split, selection, **kwargs)
+            released = True
+            return partition
+    
+        client.invoke = guarded_invoke
+        monkeypatch.setattr(ResearchDatasetSplit, 'release_confirmatory_test', guarded_release)
+        result = run_e2e_research(symbol='AAA', df=frame, commission=0., slippage=0.,
+            structured_client=client, mode='MULTI_AGENT_FULL', output_dir=tmp_path,
+            exposure_ledger_path=tmp_path / 'ledger.sqlite')
+>       assert released
+E       assert False
+
+tests\test_p0_acceptance_review.py:172: AssertionError
+---------------------------- Captured stdout call -----------------------------
+
+--- DATA VALIDATION SUMMARY ---
+Symbol: AAA
+Rows: 1000
+First timestamp: 2020-01-01 00:00:00
+Last timestamp: 2023-10-31 00:00:00
+Provider: in_memory
+
+============================== warnings summary ===============================
+.tools\p0-acceptance\clean-env\Lib\site-packages\langgraph\cache\base\__init__.py:8
+  D:\TradingAgents\.tools\p0-acceptance\clean-env\Lib\site-packages\langgraph\cache\base\__init__.py:8: LangChainPendingDeprecationWarning: The default value of `allowed_objects` will change in a future version. Pass an explicit value (e.g., allowed_objects='messages' or allowed_objects='core') to suppress this warning.
+    from langgraph.checkpoint.serde.jsonplus import JsonPlusSerializer
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_p0_acceptance_review.py::test_review_and_refinement_finish_before_confirmatory_access
+1 failed, 14 passed, 1 warning in 32.42s

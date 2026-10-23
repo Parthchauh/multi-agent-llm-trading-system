@@ -1,0 +1,16 @@
+                                                                               
+ Usage: trading-research monitor-simulation [OPTIONS] SESSION_ID               
+                                            REFERENCE_BUNDLE                   
+                                                                               
+ Compare saved simulation paths to frozen replay evidence under a persistent   
+ drift policy.                                                                 
+                                                                               
+┌─ Arguments ─────────────────────────────────────────────────────────────────┐
+│ *    session_id            TEXT  [required]                                 │
+│ *    reference_bundle      PATH  [required]                                 │
+└─────────────────────────────────────────────────────────────────────────────┘
+┌─ Options ───────────────────────────────────────────────────────────────────┐
+│ --database        PATH  [default: results\simulations.sqlite]               │
+│ --help                  Show this message and exit.                         │
+└─────────────────────────────────────────────────────────────────────────────┘
+

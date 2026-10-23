@@ -13,10 +13,14 @@ from evaluation.baselines import (
     run_baseline,
 )
 from evaluation.experiments import (
+    ChronologicalSplitConfig,
     ExperimentArchitecture,
     ExperimentConfig,
     InformationSet,
+    ModelRequestConfig,
     PromptVersion,
+    RobustnessConfig,
+    TransactionCostConfig,
 )
 from evaluation.gates import evaluate_viability
 from evaluation.models import (
@@ -56,8 +60,12 @@ __all__ = [
     "EvaluationScope",
     "ExperimentArchitecture",
     "ExperimentConfig",
+    "ChronologicalSplitConfig",
     "InformationSet",
+    "ModelRequestConfig",
     "PromptVersion",
+    "RobustnessConfig",
+    "TransactionCostConfig",
     "RankingPolicy",
     "ViabilityPolicy",
     "evaluate_viability",

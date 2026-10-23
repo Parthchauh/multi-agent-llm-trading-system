@@ -5,6 +5,7 @@ Deterministic paper portfolio tracking cash, fills, and mark-to-market equity.
 
 from __future__ import annotations
 
+import math
 import uuid
 from datetime import datetime
 
@@ -21,7 +22,7 @@ class PaperPortfolio:
     """Manages paper trading cash balance and active positions deterministically."""
 
     def __init__(self, initial_capital: float = 100_000.0) -> None:
-        if initial_capital <= 0:
+        if not math.isfinite(initial_capital) or initial_capital <= 0:
             raise ValueError("initial_capital must be positive.")
         self.initial_capital = initial_capital
         self.cash = initial_capital
@@ -35,7 +36,8 @@ class PaperPortfolio:
 
     def process_fill(self, fill: PaperFill, *, strategy_id: str) -> PaperPosition | None:
         """Process a simulated fill and update cash and positions."""
-        self.fills.append(fill)
+        if any(existing.fill_id == fill.fill_id for existing in self.fills):
+            raise ValueError("Duplicate fill identifier.")
         symbol = fill.symbol.upper()
 
         if fill.signal_type == SignalType.ENTER_LONG:
@@ -45,6 +47,7 @@ class PaperPortfolio:
             if cost > self.cash:
                 raise ValueError(f"Insufficient cash for fill: required={cost:.2f}, available={self.cash:.2f}")
             self.cash -= cost
+            self.fills.append(fill)
             pos = PaperPosition(
                 position_id=str(uuid.uuid4())[:8],
                 strategy_id=strategy_id,
@@ -53,7 +56,7 @@ class PaperPortfolio:
                 entry_price=fill.fill_price,
                 quantity=fill.quantity,
                 status=PositionStatus.OPEN,
-                realized_pnl=-fill.commission - fill.slippage,
+                realized_pnl=-fill.commission,
                 unrealized_pnl=0.0,
             )
             self.positions[symbol] = pos
@@ -62,10 +65,14 @@ class PaperPortfolio:
         elif fill.signal_type == SignalType.EXIT_LONG:
             if symbol not in self.positions:
                 raise RuntimeError(f"No open position to exit for {symbol}.")
-            pos = self.positions.pop(symbol)
+            pos = self.positions[symbol]
+            if fill.quantity != pos.quantity:
+                raise ValueError("Exit quantity must equal the held quantity; partial exits unsupported.")
+            self.positions.pop(symbol)
+            self.fills.append(fill)
             gross_proceeds = fill.fill_price * pos.quantity
-            net_proceeds = gross_proceeds - fill.commission - fill.slippage
-            trade_pnl = (fill.fill_price - pos.entry_price) * pos.quantity - fill.commission - fill.slippage
+            net_proceeds = gross_proceeds - fill.commission
+            trade_pnl = (fill.fill_price - pos.entry_price) * pos.quantity - fill.commission + pos.realized_pnl
             self.cash += net_proceeds
             self.realized_pnl += trade_pnl
             closed_pos = PaperPosition(
@@ -84,7 +91,7 @@ class PaperPortfolio:
             self.closed_positions.append(closed_pos)
             return closed_pos
 
-        return None
+        raise ValueError('Only ENTER_LONG and EXIT_LONG fills are supported.')
 
     def snapshot(self, timestamp: datetime, current_prices: dict[str, float]) -> PaperPortfolioState:
         """Generate an exact mark-to-market snapshot of portfolio equity."""
@@ -94,7 +101,7 @@ class PaperPortfolio:
             price = current_prices.get(symbol, pos.entry_price)
             val = price * pos.quantity
             holdings_val += val
-            unrealized += (price - pos.entry_price) * pos.quantity
+            unrealized += (price - pos.entry_price) * pos.quantity + pos.realized_pnl
 
         total_equity = self.cash + holdings_val
         return PaperPortfolioState(

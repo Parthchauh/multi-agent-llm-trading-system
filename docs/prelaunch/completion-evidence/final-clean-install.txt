@@ -1,0 +1,8 @@
+Resolved 178 packages in 5ms
+   Building tradingagents @ file:///D:/TradingAgents
+      Built tradingagents @ file:///D:/TradingAgents
+Prepared 2 packages in 30.12s
+Uninstalled 1 package in 825ms
+Installed 2 packages in 445ms
+ + detect-secrets==1.5.0
+ ~ tradingagents==0.2.3 (from file:///D:/TradingAgents)

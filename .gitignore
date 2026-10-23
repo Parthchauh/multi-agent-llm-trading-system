@@ -217,3 +217,8 @@ __marimo__/
 
 # Cache
 **/data_cache/
+.test_tmp*/
+.test_cache/
+.tools/
+results/holdout_exposure.sqlite*
+results/prelaunch_fixture/

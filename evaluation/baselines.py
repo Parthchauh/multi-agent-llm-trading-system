@@ -33,6 +33,7 @@ class BaselineKind(str, Enum):
     """The fixed benchmark family available to every comparable experiment."""
 
     BUY_AND_HOLD = "buy_and_hold"
+    EXPOSURE_MATCHED_BUY_AND_HOLD = "exposure_matched_buy_and_hold"
     SMA_CROSSOVER = "sma_crossover"
     RSI_MEAN_REVERSION = "rsi_mean_reversion"
     MOMENTUM = "momentum"
@@ -54,6 +55,18 @@ class BaselineRun:
     kind: BaselineKind
     result: BacktestResult
     strategy: StrategySchema | None
+
+    @property
+    def metadata(self) -> dict[str, Any]:
+        return {
+            'allocation_pct': self.result.config.position_size_pct,
+            'commission_pct': self.result.config.commission_pct,
+            'slippage_pct': self.result.config.slippage_pct,
+            'risk_overlay': self.strategy is not None,
+            'entry_timing': 'next_bar_open',
+            'shares': 'whole',
+            'maximum_holding_days': self.result.config.maximum_holding_days,
+        }
 
 
 @dataclass(frozen=True)
@@ -213,16 +226,20 @@ def run_baseline(
 ) -> BaselineRun:
     """Run one deterministic benchmark over canonical OHLCV data.
 
-    ``data``, ``config``, and ``evaluation_start`` are shared verbatim by
-    every baseline through :func:`run_all_baselines`, which makes comparison
-    windows and execution assumptions explicit and equivalent.
+    Windows and transaction costs are shared. Conventional buy-and-hold uses
+    100% allocation; exposure-matched buy-and-hold retains configured sizing.
+    Both hold through the sample without a maximum-holding-day overlay.
     """
     baseline_kind = BaselineKind(kind)
     _require_backtest_config(config)
     market_data = validate_ohlcv(data)
     boundary, start_index = _resolve_evaluation_start(market_data, evaluation_start)
 
-    if baseline_kind is BaselineKind.BUY_AND_HOLD:
+    if baseline_kind in (BaselineKind.BUY_AND_HOLD, BaselineKind.EXPOSURE_MATCHED_BUY_AND_HOLD):
+        updates = {'maximum_holding_days': None}
+        if baseline_kind is BaselineKind.BUY_AND_HOLD:
+            updates['position_size_pct'] = 100.0
+        config = BacktestConfig(**{**config.model_dump(), **updates})
         result = BacktestEngine(config).run(
             market_data,
             BuyAndHoldSignalProvider(entry_index=start_index),
@@ -248,9 +265,8 @@ def run_all_baselines(
 ) -> tuple[BaselineRun, ...]:
     """Run all fixed baselines in a stable, documented order.
 
-    No baseline is allowed a different sample window or execution
-    configuration.  Callers that need a mapping can key this tuple by
-    :attr:`BaselineRun.kind` without changing evaluation semantics.
+    Sample windows and costs match. Allocation and protective overlays are
+    explicit in each result's metadata. Callers can key by BaselineRun.kind.
     """
     return tuple(
         run_baseline(

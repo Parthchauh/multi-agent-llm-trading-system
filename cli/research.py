@@ -10,8 +10,14 @@ import typer
 
 from backtesting.engine import BacktestEngine
 from backtesting.models import BacktestConfig
+from cli.reproducibility import register as _register_reproducibility
 from data.schema import validate_ohlcv
-from evaluation.experiments import ExperimentArchitecture, ExperimentConfig
+from evaluation.experiments import (
+    ExperimentArchitecture,
+    ExperimentConfig,
+    ModelRequestConfig,
+    TransactionCostConfig,
+)
 from evaluation.platform import ExperimentRunner, SQLiteResearchRepository, report_markdown
 from research_dashboard.server import serve_dashboard
 from strategies.compiler import StrategyCompiler
@@ -93,12 +99,14 @@ def experiment(
     provider: str = typer.Option("google", "--provider"),
     model: str = typer.Option("gemini-2.5-flash", "--model"),
     seed: int = typer.Option(42, "--seed"),
+    development_only: bool = typer.Option(False, '--development-only', help='Keep test and final holdout sealed during architecture studies.'),
     repetitions: int = typer.Option(1, "--repetitions", min=1, max=100),
     debate_rounds: int | None = typer.Option(None, "--debate-rounds", min=0, max=3),
     refinement_rounds: int | None = typer.Option(None, "--refinement-rounds", min=0, max=5),
     initial_capital: float = typer.Option(100_000.0, "--initial-capital", min=1.0),
     commission_pct: float = typer.Option(0.001, "--commission-pct", min=0.0),
     slippage_pct: float = typer.Option(0.0005, "--slippage-pct", min=0.0),
+    position_size_pct: float = typer.Option(10.0, "--position-size-pct", min=0.000_001, max=100.0),
 ) -> None:
     """Run and persist one controlled, cost-aware research experiment.
 
@@ -106,19 +114,10 @@ def experiment(
     It never submits orders or invokes the legacy trading graph.
     """
 
-    executable_architectures = {
-        ExperimentArchitecture.SINGLE_AGENT,
-        ExperimentArchitecture.MULTI_AGENT_FULL,
-    }
-    if architecture not in executable_architectures:
-        raise typer.BadParameter(
-            "The CLI supports single_agent and multi_agent_full. Other controlled "
-            "treatments require their explicitly configured architecture executor."
-        )
     resolved_debate_rounds = (
         debate_rounds
         if debate_rounds is not None
-        else (1 if architecture is ExperimentArchitecture.MULTI_AGENT_FULL else 0)
+        else (0 if architecture in {ExperimentArchitecture.SINGLE_AGENT, ExperimentArchitecture.MULTI_AGENT_NO_DEBATE} else 1)
     )
     resolved_refinement_rounds = (
         refinement_rounds
@@ -133,8 +132,18 @@ def experiment(
         provider=provider,
         model=model,
         dataset_id=f"yahoo:{symbol.upper()}:{start_date}:{test_end}",
+        start=start_date,
+        end=test_end,
         symbols=(symbol,),
         seed=seed,
+        development_only=development_only,
+        model_settings=ModelRequestConfig(temperature=0.2, timeout_seconds=30),
+        transaction_costs=TransactionCostConfig(
+            initial_capital=initial_capital,
+            commission_pct=commission_pct,
+            slippage_pct=slippage_pct,
+            position_size_pct=position_size_pct,
+        ),
         repetitions=repetitions,
         debate_rounds=resolved_debate_rounds,
         refinement_rounds=resolved_refinement_rounds,
@@ -144,11 +153,7 @@ def experiment(
     # LangGraph imports unless the user explicitly starts an experiment.
     from scripts.run_research_e2e import run_e2e_research
 
-    selected_mode = (
-        "SINGLE_AGENT"
-        if architecture is ExperimentArchitecture.SINGLE_AGENT
-        else "MULTI_AGENT_FULL"
-    )
+    selected_mode = architecture.value.upper()
 
     def executor(_config: ExperimentConfig, run_symbol: str, repetition: int) -> dict[str, object]:
         artifact_dir = output_dir / config.experiment_id / run_symbol / f"repetition-{repetition}"
@@ -161,19 +166,33 @@ def experiment(
             initial_capital=initial_capital,
             commission=commission_pct,
             slippage=slippage_pct,
+            position_size_pct=position_size_pct,
             model_provider=provider,
             model_name=model,
             max_debate_rounds=resolved_debate_rounds,
             max_refinement_rounds=resolved_refinement_rounds,
             seed=seed + repetition - 1,
             mode=selected_mode,
+            development_only=development_only,
             output_dir=artifact_dir,
+            campaign_id=config.experiment_id,
+            exposure_ledger_path=database.resolve().parent / 'holdout_exposure.sqlite',
         )
         return {
             "status": result["status"],
             "strategy_id": result["selected_strategy_id"],
             "validation_metrics": result["validation_metrics"],
-            "final_holdout_metrics": result["test_metrics"],
+            'train_metrics': result.get('train_metrics', {}),
+            'test_metrics': result['test_metrics'],
+            'final_holdout_metrics': result.get('final_holdout_metrics', {}),
+            'certification': result.get('certification', {}),
+            'selected_strategy': result.get('selected_strategy'),
+            'risk': result.get('risk'),
+            'provenance': result.get('provenance'),
+            'lineage': result.get('lineage'),
+            'execution_config': result.get('execution_config'),
+            'invocation_audit': result.get('invocation_audit'),
+            'development_only': result.get('development_only', development_only),
             "artifact_directory": result["output_dir"],
         }
 
@@ -229,6 +248,8 @@ def serve_dashboard_command(
     """Serve a local, read-only dashboard for persisted research reports."""
     serve_dashboard(database, host=host, port=port, announce=typer.echo)
 
+
+_register_reproducibility(app)
 
 if __name__ == "__main__":
     app()

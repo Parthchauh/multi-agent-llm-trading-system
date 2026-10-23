@@ -1,0 +1,20 @@
+                                                                               
+ Usage: trading-research fold-research [OPTIONS] PRICES CONFIGURATION          
+ RESPONSES                                                                     
+                                       OUTPUT                                  
+                                                                               
+ Replay per-fold recorded candidate responses on DEVELOPMENT data only.        
+                                                                               
+ The JSON array is folds -> attempts -> strategy schema. Invalid responses     
+ remain in the search record. This mode makes no live model calls.             
+                                                                               
+┌─ Arguments ─────────────────────────────────────────────────────────────────┐
+│ *    prices             PATH  [required]                                    │
+│ *    configuration      PATH  [required]                                    │
+│ *    responses          PATH  [required]                                    │
+│ *    output             PATH  [required]                                    │
+└─────────────────────────────────────────────────────────────────────────────┘
+┌─ Options ───────────────────────────────────────────────────────────────────┐
+│ --help          Show this message and exit.                                 │
+└─────────────────────────────────────────────────────────────────────────────┘
+

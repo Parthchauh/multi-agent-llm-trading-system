@@ -127,19 +127,11 @@ class _ConfidenceModel(_FrozenStructuredModel):
 class BullCase(_ConfidenceModel):
     """A structured supporting case; it contains no strategy or decision field."""
 
-    supporting_arguments: tuple[str, ...] = Field(
-        min_length=1, max_length=_MAX_LIST_ITEMS
-    )
-    supporting_evidence: tuple[str, ...] = Field(
-        default_factory=tuple, max_length=_MAX_LIST_ITEMS
-    )
-    assumptions: tuple[str, ...] = Field(
-        default_factory=tuple, max_length=_MAX_LIST_ITEMS
-    )
+    supporting_arguments: tuple[str, ...] = Field(min_length=1, max_length=_MAX_LIST_ITEMS)
+    supporting_evidence: tuple[str, ...] = Field(default_factory=tuple, max_length=_MAX_LIST_ITEMS)
+    assumptions: tuple[str, ...] = Field(default_factory=tuple, max_length=_MAX_LIST_ITEMS)
 
-    @field_validator(
-        "supporting_arguments", "supporting_evidence", "assumptions", mode="before"
-    )
+    @field_validator("supporting_arguments", "supporting_evidence", "assumptions", mode="before")
     @classmethod
     def arrays_are_stored_immutably(cls, value: object) -> object:
         return _tuple_from_json_array(value)
@@ -154,16 +146,10 @@ class BearCase(_ConfidenceModel):
     """A structured falsification case; it cannot reject or alter a strategy."""
 
     objections: tuple[str, ...] = Field(min_length=1, max_length=_MAX_LIST_ITEMS)
-    failure_modes: tuple[str, ...] = Field(
-        default_factory=tuple, max_length=_MAX_LIST_ITEMS
-    )
-    invalid_assumptions: tuple[str, ...] = Field(
-        default_factory=tuple, max_length=_MAX_LIST_ITEMS
-    )
+    failure_modes: tuple[str, ...] = Field(default_factory=tuple, max_length=_MAX_LIST_ITEMS)
+    invalid_assumptions: tuple[str, ...] = Field(default_factory=tuple, max_length=_MAX_LIST_ITEMS)
 
-    @field_validator(
-        "objections", "failure_modes", "invalid_assumptions", mode="before"
-    )
+    @field_validator("objections", "failure_modes", "invalid_assumptions", mode="before")
     @classmethod
     def arrays_are_stored_immutably(cls, value: object) -> object:
         return _tuple_from_json_array(value)
@@ -178,15 +164,9 @@ class DebateSynthesis(_ConfidenceModel):
     """One bounded-round synthesis with no acceptance, rejection, or trade action."""
 
     round_number: int = Field(ge=1, le=_MAX_DEBATE_ROUNDS)
-    points_of_agreement: tuple[str, ...] = Field(
-        default_factory=tuple, max_length=_MAX_LIST_ITEMS
-    )
-    unresolved_questions: tuple[str, ...] = Field(
-        default_factory=tuple, max_length=_MAX_LIST_ITEMS
-    )
-    research_implications: tuple[str, ...] = Field(
-        min_length=1, max_length=_MAX_LIST_ITEMS
-    )
+    points_of_agreement: tuple[str, ...] = Field(default_factory=tuple, max_length=_MAX_LIST_ITEMS)
+    unresolved_questions: tuple[str, ...] = Field(default_factory=tuple, max_length=_MAX_LIST_ITEMS)
+    research_implications: tuple[str, ...] = Field(min_length=1, max_length=_MAX_LIST_ITEMS)
 
     @field_validator("round_number", mode="before")
     @classmethod
@@ -202,9 +182,7 @@ class DebateSynthesis(_ConfidenceModel):
     def arrays_are_stored_immutably(cls, value: object) -> object:
         return _tuple_from_json_array(value)
 
-    @field_validator(
-        "points_of_agreement", "unresolved_questions", "research_implications"
-    )
+    @field_validator("points_of_agreement", "unresolved_questions", "research_implications")
     @classmethod
     def narrative_items_are_safe(cls, value: tuple[str, ...]) -> tuple[str, ...]:
         return tuple(_bounded_text(item, field_name="synthesis item") for item in value)
@@ -235,9 +213,7 @@ class DebateRound(_FrozenStructuredModel):
 class DebateSession(_FrozenStructuredModel):
     """Chronological, bounded debate audit record; rounds are never overwritten."""
 
-    rounds: tuple[DebateRound, ...] = Field(
-        default_factory=tuple, max_length=_MAX_DEBATE_ROUNDS
-    )
+    rounds: tuple[DebateRound, ...] = Field(default_factory=tuple, max_length=_MAX_DEBATE_ROUNDS)
 
     @field_validator("rounds", mode="before")
     @classmethod
@@ -378,15 +354,9 @@ class PerformanceAnalysis(_ConfidenceModel):
 class CriticReport(_ConfidenceModel):
     """Structured critique whose proposed changes remain declarative and scoped."""
 
-    accepted_assumptions: tuple[str, ...] = Field(
-        default_factory=tuple, max_length=_MAX_LIST_ITEMS
-    )
-    rejected_assumptions: tuple[str, ...] = Field(
-        default_factory=tuple, max_length=_MAX_LIST_ITEMS
-    )
-    structural_problems: tuple[str, ...] = Field(
-        default_factory=tuple, max_length=_MAX_LIST_ITEMS
-    )
+    accepted_assumptions: tuple[str, ...] = Field(default_factory=tuple, max_length=_MAX_LIST_ITEMS)
+    rejected_assumptions: tuple[str, ...] = Field(default_factory=tuple, max_length=_MAX_LIST_ITEMS)
+    structural_problems: tuple[str, ...] = Field(default_factory=tuple, max_length=_MAX_LIST_ITEMS)
     suggested_changes: tuple[SchemaSupportedChange, ...] = Field(
         default_factory=tuple, max_length=_MAX_LIST_ITEMS
     )
@@ -404,9 +374,7 @@ class CriticReport(_ConfidenceModel):
     def change_arrays_are_stored_immutably(cls, value: object) -> object:
         return _tuple_from_json_array(value)
 
-    @field_validator(
-        "accepted_assumptions", "rejected_assumptions", "structural_problems"
-    )
+    @field_validator("accepted_assumptions", "rejected_assumptions", "structural_problems")
     @classmethod
     def narrative_items_are_safe(cls, value: tuple[str, ...]) -> tuple[str, ...]:
         return tuple(_bounded_text(item, field_name="critic item") for item in value)
@@ -685,9 +653,7 @@ class RiskManagerAgent:
             "regime": _artifact_data(regime),
             "bull_case": _artifact_data(bull_case),
             "bear_case": _artifact_data(bear_case),
-            "debate_session": (
-                None if debate_session is None else _artifact_data(debate_session)
-            ),
+            "debate_session": (None if debate_session is None else _artifact_data(debate_session)),
             "constraints": _strategy_constraints(),
         }
         return _request_typed(
@@ -732,7 +698,7 @@ class StrategyCriticAgent:
         strategy: StrategySchema,
         bull_case: BullCase,
         bear_case: BearCase,
-        risk_review: RiskReview,
+        risk_review: RiskReview | None,
         deterministic_evaluation: BaseModel,
         regime: RegimeAssessment,
         complexity_metrics: BaseModel,
@@ -744,18 +710,14 @@ class StrategyCriticAgent:
             "strategy": _artifact_data(strategy),
             "bull_case": _artifact_data(bull_case),
             "bear_case": _artifact_data(bear_case),
-            "risk_review": _artifact_data(risk_review),
+            "risk_review": None if risk_review is None else _artifact_data(risk_review),
             "deterministic_evaluation": _artifact_data(deterministic_evaluation),
             "regime": _artifact_data(regime),
             "complexity_metrics": _artifact_data(complexity_metrics),
             "performance_analysis": (
-                None
-                if performance_analysis is None
-                else _artifact_data(performance_analysis)
+                None if performance_analysis is None else _artifact_data(performance_analysis)
             ),
-            "debate_session": (
-                None if debate_session is None else _artifact_data(debate_session)
-            ),
+            "debate_session": (None if debate_session is None else _artifact_data(debate_session)),
             "constraints": _strategy_constraints(),
         }
         return _request_typed(

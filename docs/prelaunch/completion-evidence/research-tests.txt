@@ -1,0 +1,32 @@
+F...................                                                     [100%]
+================================== FAILURES ===================================
+___ test_generation_sees_only_training_copies_and_all_attempts_are_counted ____
+
+    def test_generation_sees_only_training_copies_and_all_attempts_are_counted():
+        frame = make_ohlcv(120)
+        seen = []
+        def factory(train, fold, attempt):
+            seen.append((fold, attempt, train.index[0], train.index[-1]))
+            train.iloc[:, :] = 1.  # Candidate code cannot mutate the scoring data.
+            if attempt == 1:
+                return {'broken': True}
+            return make_simple_strategy()
+        original = frame.copy(deep=True)
+        report = run(frame, factory)
+        assert frame.equals(original)
+        assert len(seen) == 6
+        assert seen[0][2:] == (frame.index[0], frame.index[59])
+        assert seen[3][2:] == (frame.index[20], frame.index[79])
+        assert report['attempts_used'] == 6
+        assert report['tested_folds'] == 2
+        for fold in report['folds']:
+            assert [a['status'] for a in fold['attempts']] == ['REJECTED', 'EVALUATED', 'DUPLICATE']
+            assert fold['train']['end'] < fold['validation']['start']
+            assert fold['validation']['end'] < fold['test']['start']
+>           assert fold['selected']['config']['position_size_pct'] == 20.
+E           assert 10.0 == 20.0
+
+tests\test_fold_campaign.py:41: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_fold_campaign.py::test_generation_sees_only_training_copies_and_all_attempts_are_counted
+1 failed, 19 passed in 10.20s

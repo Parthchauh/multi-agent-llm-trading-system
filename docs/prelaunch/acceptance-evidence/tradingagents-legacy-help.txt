@@ -1,0 +1,12 @@
+                                                                               
+ Usage: tradingagents-legacy [OPTIONS]                                         
+                                                                               
+┌─ Options ───────────────────────────────────────────────────────────────────┐
+│ --install-completion          Install completion for the current shell.     │
+│ --show-completion             Show completion for the current shell, to     │
+│                               copy it or customize the installation.        │
+│ --help                        Show this message and exit.                   │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+D:\TradingAgents\.tools\p0-acceptance\clean-env\Lib\site-packages\langgraph\checkpoint\base\__init__.py:21: LangChainPendingDeprecationWarning: The default value of `allowed_objects` will change in a future version. Pass an explicit value (e.g., allowed_objects='messages' or allowed_objects='core') to suppress this warning.
+  from langgraph.checkpoint.serde.jsonplus import JsonPlusSerializer

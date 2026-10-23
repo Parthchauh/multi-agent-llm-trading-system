@@ -1,0 +1,139 @@
+{
+  "secret-scan": {
+    "command": [
+      "D:\\TradingAgents\\.tools\\p0-acceptance\\clean-env\\Scripts\\python.exe",
+      "-m",
+      "scripts.check_secrets"
+    ],
+    "exit_code": 0,
+    "seconds": 29.898
+  },
+  "lint": {
+    "command": [
+      "D:\\TradingAgents\\.tools\\p0-acceptance\\clean-env\\Scripts\\python.exe",
+      "-m",
+      "ruff",
+      "check",
+      "research_validation/campaign.py",
+      "research_validation/uncertainty.py",
+      "research_validation/walk_forward.py",
+      "data/snapshots.py",
+      "evaluation/registry.py",
+      "data/adjustments.py",
+      "evaluation/ablation.py",
+      "paper_trading/operations.py",
+      "paper_trading/runner.py",
+      "research_service",
+      "paper_trading/drift.py",
+      "cli/reproducibility.py",
+      "research_dashboard/views.py",
+      "tradingagents/agents/telemetry.py",
+      "scripts/release_gate.py",
+      "scripts/verify_prelaunch.py"
+    ],
+    "exit_code": 0,
+    "seconds": 0.498
+  },
+  "types": {
+    "command": [
+      "D:\\TradingAgents\\.tools\\p0-acceptance\\clean-env\\Scripts\\python.exe",
+      "-m",
+      "mypy",
+      "--follow-imports=skip",
+      "--ignore-missing-imports",
+      "--check-untyped-defs",
+      "research_service",
+      "research_validation/campaign.py",
+      "research_validation/uncertainty.py",
+      "data/snapshots.py",
+      "evaluation/registry.py",
+      "data/adjustments.py",
+      "evaluation/ablation.py",
+      "paper_trading/operations.py",
+      "cli/reproducibility.py",
+      "paper_trading/drift.py"
+    ],
+    "exit_code": 0,
+    "seconds": 2.432
+  },
+  "security": {
+    "command": [
+      "D:\\TradingAgents\\.tools\\p0-acceptance\\clean-env\\Scripts\\python.exe",
+      "-m",
+      "bandit",
+      "-r",
+      "research_service",
+      "research_validation/campaign.py",
+      "research_validation/uncertainty.py",
+      "data/snapshots.py",
+      "evaluation/registry.py",
+      "data/adjustments.py",
+      "evaluation/ablation.py",
+      "paper_trading/operations.py",
+      "cli/reproducibility.py",
+      "paper_trading/drift.py",
+      "-f",
+      "json"
+    ],
+    "exit_code": 0,
+    "seconds": 2.135
+  },
+  "tests": {
+    "command": [
+      "D:\\TradingAgents\\.tools\\p0-acceptance\\clean-env\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-m",
+      "not live",
+      "-q",
+      "--basetemp=.tools\\project-completion\\verification-release\\test-tmp",
+      "-p",
+      "no:cacheprovider"
+    ],
+    "exit_code": 0,
+    "seconds": 110.027
+  },
+  "fixture": {
+    "command": [
+      "D:\\TradingAgents\\.tools\\p0-acceptance\\clean-env\\Scripts\\python.exe",
+      "-m",
+      "tests.prelaunch_fixture",
+      "--output",
+      ".tools\\project-completion\\verification-release\\fixture"
+    ],
+    "exit_code": 0,
+    "seconds": 25.68
+  },
+  "promotion-disabled": {
+    "command": [
+      "D:\\TradingAgents\\.tools\\p0-acceptance\\clean-env\\Scripts\\python.exe",
+      "-m",
+      "scripts.release_gate",
+      "--assert-disabled"
+    ],
+    "exit_code": 0,
+    "seconds": 2.781
+  },
+  "console-help": {
+    "command": [
+      "D:\\TradingAgents\\.tools\\p0-acceptance\\clean-env\\Scripts\\trading-research.exe",
+      "--help"
+    ],
+    "exit_code": 0,
+    "seconds": 7.063
+  },
+  "sbom": {
+    "command": [
+      "D:\\TradingAgents\\.tools\\p0-acceptance\\clean-env\\Scripts\\python.exe",
+      "-m",
+      "cyclonedx_py",
+      "environment",
+      "--of",
+      "JSON",
+      "--output-file",
+      ".tools\\project-completion\\verification-release\\sbom.json"
+    ],
+    "exit_code": 0,
+    "seconds": 48.321
+  }
+}

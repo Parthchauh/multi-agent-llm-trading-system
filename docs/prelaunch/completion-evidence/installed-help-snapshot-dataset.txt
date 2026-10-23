@@ -1,0 +1,16 @@
+                                                                               
+ Usage: trading-research snapshot-dataset [OPTIONS] PRICES METADATA            
+                                                                               
+ Save canonical CSV and explicit provider identity as a hashed offline         
+ dataset.                                                                      
+                                                                               
+┌─ Arguments ─────────────────────────────────────────────────────────────────┐
+│ *    prices        PATH  [required]                                         │
+│ *    metadata      PATH  [required]                                         │
+└─────────────────────────────────────────────────────────────────────────────┘
+┌─ Options ───────────────────────────────────────────────────────────────────┐
+│ --store           PATH  [default: results\datasets]                         │
+│ --sessions        PATH                                                      │
+│ --help                  Show this message and exit.                         │
+└─────────────────────────────────────────────────────────────────────────────┘
+

@@ -1,0 +1,7 @@
+Resolved 134 packages in 44ms
+   Building tradingagents @ file:///D:/TradingAgents
+      Built tradingagents @ file:///D:/TradingAgents
+Prepared 1 package in 11.04s
+Uninstalled 1 package in 293ms
+Installed 1 package in 47ms
+ ~ tradingagents==0.2.3 (from file:///D:/TradingAgents)

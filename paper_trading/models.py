@@ -19,7 +19,7 @@ def _utc_now() -> datetime:
 
 
 class _FrozenStrictModel(BaseModel):
-    model_config = ConfigDict(frozen=True, extra="forbid", strict=True)
+    model_config = ConfigDict(frozen=True, extra="forbid", strict=True, allow_inf_nan=False)
 
 
 class SignalType(str, Enum):
@@ -57,6 +57,8 @@ class PaperFill(_FrozenStrictModel):
     quantity: float = Field(gt=0.0)
     commission: float = Field(ge=0.0)
     slippage: float = Field(ge=0.0)
+    reference_price: float | None = Field(default=None, gt=0.0)
+    exit_reason: str | None = None
 
     @property
     def gross_value(self) -> float:
@@ -64,7 +66,7 @@ class PaperFill(_FrozenStrictModel):
 
     @property
     def total_cost(self) -> float:
-        return self.gross_value + self.commission + self.slippage
+        return self.gross_value + self.commission
 
 
 class PositionStatus(str, Enum):

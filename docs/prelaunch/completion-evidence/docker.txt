@@ -1,0 +1,9 @@
+Client:
+ Version:           26.1.4
+ API version:       1.45
+ Go version:        go1.21.11
+ Git commit:        5650f9b
+ Built:             Wed Jun  5 11:29:54 2024
+ OS/Arch:           windows/amd64
+ Context:           default
+error during connect: this error may indicate that the docker daemon is not running: Get "http://%2F%2F.%2Fpipe%2Fdocker_engine/v1.45/version": open //./pipe/docker_engine: The system cannot find the file specified.

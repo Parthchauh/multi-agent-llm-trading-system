@@ -1,0 +1,35 @@
+2026-10-20 14:20:10,693 [INFO] run_research_e2e: === PHASE 1: PRE-FLIGHT INITIALIZATION ===
+2026-10-20 14:20:10,697 [INFO] run_research_e2e: Run ID: e2e_AAA_20261020_142010 | Symbol: AAA | Mode: SINGLE_AGENT
+2026-10-20 14:20:10,697 [INFO] run_research_e2e: === PHASE 5: DATA ACQUISITION & VALIDATION ===
+2026-10-20 14:20:10,871 [INFO] run_research_e2e: === PHASE 6: LLM CLIENT CONFIGURATION ===
+2026-10-20 14:20:10,906 [INFO] run_research_e2e: === PHASE 7-11: RESEARCH LIFECYCLE EXECUTION ===
+2026-10-20 14:20:10,958 [INFO] tradingagents.graph.research_graph: research_event stage=load_data outcome=succeeded
+2026-10-20 14:20:11,009 [INFO] tradingagents.graph.research_graph: research_event stage=compute_regime outcome=succeeded
+2026-10-20 14:20:11,025 [INFO] tradingagents.graph.research_graph: research_event stage=analyze_regime outcome=succeeded
+2026-10-20 14:20:11,046 [INFO] tradingagents.graph.research_graph: research_event stage=generate_strategy outcome=succeeded
+2026-10-20 14:20:11,049 [INFO] tradingagents.graph.research_graph: research_event stage=validate_strategy outcome=succeeded
+2026-10-20 14:20:11,083 [INFO] tradingagents.graph.research_graph: research_event stage=compile_strategy outcome=succeeded
+2026-10-20 14:20:11,135 [INFO] tradingagents.graph.research_graph: research_event stage=backtest outcome=succeeded
+2026-10-20 14:20:11,239 [INFO] run_research_e2e: Lifecycle completed with status: VIABILITY_REJECTED
+2026-10-20 14:20:11,378 [INFO] run_research_e2e: === PHASE 13: BASELINE COMPARISONS ===
+
+--- DATA VALIDATION SUMMARY ---
+Symbol: AAA
+Rows: 350
+First timestamp: 2020-01-02 00:00:00
+Last timestamp: 2021-05-05 00:00:00
+Provider: in_memory
+
+{
+  "status": "VIABILITY_REJECTED",
+  "certification": {
+    "TECHNICALLY_VALID": true,
+    "STATISTICALLY_VIABLE": false,
+    "RISK_ACCEPTED": false,
+    "DEPLOYMENT_ELIGIBLE": false,
+    "performance_screening_passed": false,
+    "evidence_state": "INSUFFICIENT_EVIDENCE",
+    "real_money_execution": false
+  },
+  "output": "D:\\TradingAgents\\results\\prelaunch_fixture"
+}

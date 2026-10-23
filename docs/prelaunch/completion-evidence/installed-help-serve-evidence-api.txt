@@ -1,0 +1,21 @@
+                                                                               
+ Usage: trading-research serve-evidence-api [OPTIONS] CERTIFICATE PRIVATE_KEY  
+                                                                               
+ Serve the separate TLS-only authenticated, tenant-scoped read API on          
+ loopback.                                                                     
+                                                                               
+┌─ Arguments ─────────────────────────────────────────────────────────────────┐
+│ *    certificate      PATH  [required]                                      │
+│ *    private_key      PATH  [required]                                      │
+└─────────────────────────────────────────────────────────────────────────────┘
+┌─ Options ───────────────────────────────────────────────────────────────────┐
+│ --access-database          PATH                     [default:               │
+│                                                     results\service-access… │
+│ --research-database        PATH                     [default:               │
+│                                                     research.sqlite]        │
+│ --port                     INTEGER RANGE            [default: 8443]         │
+│                            [1<=x<=65535]                                    │
+│ --help                                              Show this message and   │
+│                                                     exit.                   │
+└─────────────────────────────────────────────────────────────────────────────┘
+

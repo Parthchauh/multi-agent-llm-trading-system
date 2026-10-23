@@ -28,7 +28,8 @@ def make_dataset_split(n=400, seed=42, *, context_frac=0.60, validation_frac=0.2
     v_end = c_end + int(n * validation_frac)
     t_end = v_end + int(n * test_frac)
     def _p(df, role, pid): return ResearchPartition(partition_id=pid, role=role, observations=df)
-    return ResearchDatasetSplit(context=_p(full.iloc[:c_end], ResearchPartitionRole.CONTEXT, "ctx-test"), validation=_p(full.iloc[c_end:v_end], ResearchPartitionRole.VALIDATION, "val-test"), test=_p(full.iloc[v_end:t_end], ResearchPartitionRole.TEST, "test-test"), final_holdout=_p(full.iloc[t_end:], ResearchPartitionRole.FINAL_HOLDOUT, "hold-test"))
+    # Explicit compatibility fixture for the older low-level partition contracts.
+    return ResearchDatasetSplit(context=_p(full.iloc[:c_end], ResearchPartitionRole.CONTEXT, "ctx-test"), validation=_p(full.iloc[c_end:v_end], ResearchPartitionRole.VALIDATION, "val-test"), test=_p(full.iloc[v_end:t_end], ResearchPartitionRole.TEST, "test-test"), final_holdout=_p(full.iloc[t_end:], ResearchPartitionRole.FINAL_HOLDOUT, "hold-test"), legacy_access=True)
 
 def make_frozen_selection(strategy_id="strat-001"):
     return FrozenStrategySelection(strategy_id=strategy_id, strategy_hash=hashlib.sha256(strategy_id.encode()).hexdigest(), frozen_at=datetime.now(timezone.utc))

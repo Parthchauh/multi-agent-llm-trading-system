@@ -1,0 +1,43 @@
+WARN Fixing invalid version specifier by removing star after comparison operator other than equal and not equal (before: `>=3.6.*`; after: `>=3.6`)
+WARN Fixing invalid version specifier by removing star after comparison operator other than equal and not equal (before: `>=3.6.*`; after: `>=3.6`)
+WARN Fixing invalid version specifier by removing star after comparison operator other than equal and not equal (before: `>=3.6.*`; after: `>=3.6`)
+WARN Fixing invalid version specifier by removing trailing comma (before: `>=3.5,`; after: `>=3.5`)
+Resolved 175 packages in 52.82s
+Added arrow v1.4.0
+Added ast-serialize v0.13.1
+Added bandit v1.9.4
+Added boolean-py v5.0
+Added cachecontrol v0.14.4
+Added chardet v7.7.0
+Added cyclonedx-bom v7.5.0
+Added cyclonedx-python-lib v11.12.0
+Added defusedxml v0.7.1
+Added filelock v4.1.0, v4.2.4
+Added fqdn v1.6.0
+Added isoduration v20.11.0
+Added jsonschema v4.26.0
+Added jsonschema-specifications v2025.9.1
+Added lark v1.3.1
+Added librt v0.16.0
+Added license-expression v30.4.4
+Added msgpack v1.2.3
+Added mypy v2.4.0
+Added mypy-extensions v1.1.0
+Added packageurl-python v0.17.6
+Added pathspec v1.1.1
+Added pip v26.2.2
+Added pip-api v0.0.35
+Added pip-audit v2.10.1
+Added pip-requirements-parser v32.0.1
+Added py-serializable v2.1.0
+Added pyparsing v3.3.3
+Added referencing v0.37.0
+Added rfc3339-validator v0.1.4
+Added rfc3986-validator v0.1.1
+Added rfc3987-syntax v1.1.0
+Added rpds-py v0.30.0, v2026.9.1
+Added sortedcontainers v2.4.0
+Added stevedore v5.8.0, v5.9.1
+Added tomli-w v1.2.0
+Added uri-template v1.3.0
+Added webcolors v25.10.0

@@ -124,6 +124,8 @@ class LangChainStructuredOutputClient:
         messages: PromptMessages,
     ) -> StructuredModel:
         started = perf_counter()
+        # A failed request must never inherit token counts from a prior success.
+        self.last_invocation = None
         try:
             runnable = self._llm.with_structured_output(schema)
             raw = runnable.invoke(messages)
@@ -171,7 +173,7 @@ class LangChainStructuredOutputClient:
         def token_count(*names: str) -> int | None:
             for name in names:
                 value = usage.get(name)
-                if isinstance(value, int) and not isinstance(value, bool):
+                if isinstance(value, int) and not isinstance(value, bool) and value >= 0:
                     return value
             return None
 

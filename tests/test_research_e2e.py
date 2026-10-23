@@ -22,10 +22,10 @@ from typing import Any
 import pandas as pd
 import pytest
 
+import scripts.run_research_e2e as e2e_runner
 from backtesting.models import BacktestConfig
 from data.research_split import FrozenStrategySelection
 from paper_trading.runner import PaperTradingRunner
-from risk import RiskPolicy
 from scripts.run_research_e2e import (
     build_research_dataset_split,
     run_e2e_research,
@@ -54,7 +54,7 @@ class MockLifecycleClient:
             # 2. Strategy draft
             _draft(strat),
             # 3. Bull researcher
-            {"arguments": ["Strong trend continuation expected"], "catalysts": ["Earnings momentum"], "confidence": 0.8},
+            {"supporting_arguments": ["Strong trend continuation expected"], "supporting_evidence": ["Earnings momentum"], "confidence": 0.8},
             # 4. Bear researcher
             {"objections": ["Overextended"], "failure_modes": ["Reversal"], "invalid_assumptions": ["Low vol"], "confidence": 0.7},
             # 5. Debate synthesis
@@ -64,12 +64,12 @@ class MockLifecycleClient:
             # 7. Performance analyst
             {"strengths": ["Positive return"], "weaknesses": [], "performance_concentration": "Low", "trade_quality": "High", "warnings": [], "confidence": 0.8},
             # 8. Critic
-            {"accepted_assumptions": ["Trend following"], "rejected_assumptions": [], "structural_problems": [], "suggested_changes": ["Update entry"], "refinement_priority": "LOW", "confidence": 0.8},
+            {"accepted_assumptions": ["Trend following"], "rejected_assumptions": [], "structural_problems": [], "suggested_changes": [], "refinement_priority": "LOW", "confidence": 0.8},
             # 9. Refiner
             {
                 "parent_strategy_id": "placeholder",
                 "revision_reason": "Refined RSI entry threshold",
-                "changes": ["entry threshold adjusted"],
+                "changes": [],
                 "revised_strategy": child_strat,
                 "confidence": 0.8,
             },
@@ -91,9 +91,17 @@ class MockLifecycleClient:
         return schema.model_validate(item)
 
 
-def test_e2e_runner_configuration(tmp_path: Path) -> None:
+def test_e2e_runner_configuration(monkeypatch, tmp_path: Path) -> None:
     df = make_ohlcv(n=350, seed=1)
     client = MockLifecycleClient()
+    observed_candidates = []
+    canonical_selector = e2e_runner.select_validation_candidate
+
+    def record_selection(candidates):
+        observed_candidates.extend(candidates)
+        return canonical_selector(candidates)
+
+    monkeypatch.setattr(e2e_runner, "select_validation_candidate", record_selection)
     result = run_e2e_research(
         symbol="AAPL",
         df=df,
@@ -101,12 +109,16 @@ def test_e2e_runner_configuration(tmp_path: Path) -> None:
         mode="SINGLE_AGENT",
         output_dir=tmp_path / "test_cfg",
     )
-    assert result["status"] == "COMPLETED"
+    assert result["status"] == "VIABILITY_REJECTED"
     assert result["selected_strategy_id"] is not None
     assert "total_return_pct" in result["validation_metrics"]
-    assert "total_return_pct" in result["test_metrics"]
+    assert result['test_metrics'] == {}
+    assert result['final_holdout_metrics'] == {}
+    assert result['certification']['DEPLOYMENT_ELIGIBLE'] is False
     config = json.loads((tmp_path / "test_cfg" / "config.json").read_text(encoding="utf-8"))
     assert config["position_size_pct"] == 10.0
+    assert len(observed_candidates) == 0
+    assert (tmp_path / "test_cfg" / "selection.json").exists()
 
 
 def test_e2e_invalid_data_fails(tmp_path: Path) -> None:
@@ -142,12 +154,16 @@ def test_e2e_invalid_strategy_never_backtests(tmp_path: Path) -> None:
     assert result["selected_strategy_id"] is None
 
 
-def test_e2e_risk_failure_not_overridden(tmp_path: Path) -> None:
+def test_e2e_risk_failure_not_overridden(tmp_path: Path, monkeypatch) -> None:
     """When risk policy rejects (e.g. max drawdown limit exceeded), LLM review is not called."""
     client = MockLifecycleClient()
+    # Isolate risk rejection from the independent statistical evidence gate.
+    from evaluation.models import ViabilityPolicy
+    monkeypatch.setattr(e2e_runner, 'launch_viability_policy', lambda: ViabilityPolicy())
     df = make_ohlcv(n=300, seed=3)
     # Set an impossible max drawdown limit so risk engine rejects
-    tight_risk_policy = RiskPolicy(max_drawdown_pct=0.0001)
+    from risk.profiles import risk_profile
+    tight_risk_policy = risk_profile().model_copy(update={'max_drawdown_pct': 0.0001})
 
     result = run_e2e_research(
         symbol="AAPL",
@@ -173,9 +189,17 @@ def test_e2e_holdout_not_exposed() -> None:
     with pytest.raises(Exception):
         split.release_final_holdout(None)  # type: ignore[arg-type]
 
-    # Valid selection releases holdout
+    # A fabricated selection alone cannot bypass the canonical lifecycle.
     sel = FrozenStrategySelection(strategy_id="strat-1", strategy_hash="hash1", frozen_at=pd.Timestamp.utcnow())
-    holdout = split.release_final_holdout(sel)
+    with pytest.raises(ValueError, match='lifecycle'):
+        split.release_final_holdout(sel)
+    from evaluation.certification import EvaluationLifecycle
+    lifecycle = EvaluationLifecycle()
+    lifecycle.freeze('hash1')
+    lifecycle.begin_test('hash1')
+    split.release_confirmatory_test(sel, lifecycle=lifecycle)
+    lifecycle.begin_holdout(test_passed=True)
+    holdout = split.release_final_holdout(sel, lifecycle=lifecycle)
     assert holdout.final_holdout.observations is not None
 
 
@@ -196,6 +220,7 @@ def test_e2e_result_files_written(tmp_path: Path) -> None:
         "train_metrics.json",
         "validation_metrics.json",
         "test_metrics.json",
+        "selection.json",
         "lineage.json",
         "risk.json",
         "comparison.json",

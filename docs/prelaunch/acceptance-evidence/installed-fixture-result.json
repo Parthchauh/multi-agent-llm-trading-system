@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "status": "VIABILITY_REJECTED",
+  "outcome_class": "EXPECTED_RESEARCH_REJECTION",
+  "runtime_failure": false,
+  "certification": {
+    "TECHNICALLY_VALID": true,
+    "STATISTICALLY_VIABLE": false,
+    "RISK_ACCEPTED": false,
+    "DEPLOYMENT_ELIGIBLE": false,
+    "performance_screening_passed": false,
+    "evidence_state": "INSUFFICIENT_EVIDENCE",
+    "real_money_execution": false
+  }
+}

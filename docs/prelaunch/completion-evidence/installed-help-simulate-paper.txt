@@ -1,0 +1,17 @@
+                                                                               
+ Usage: trading-research simulate-paper [OPTIONS] CANDIDATE_ID SYMBOL PRICES   
+                                                                               
+ Replay saved bars with persistent operational controls, without market        
+ connections.                                                                  
+                                                                               
+┌─ Arguments ─────────────────────────────────────────────────────────────────┐
+│ *    candidate_id      TEXT  [required]                                     │
+│ *    symbol            TEXT  [required]                                     │
+│ *    prices            PATH  [required]                                     │
+└─────────────────────────────────────────────────────────────────────────────┘
+┌─ Options ───────────────────────────────────────────────────────────────────┐
+│ --registry        PATH  [default: results\registry.sqlite]                  │
+│ --database        PATH  [default: results\simulations.sqlite]               │
+│ --help                  Show this message and exit.                         │
+└─────────────────────────────────────────────────────────────────────────────┘
+

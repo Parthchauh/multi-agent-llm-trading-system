@@ -78,11 +78,13 @@ def test_all_baselines_share_the_same_window_and_execution_config(
     runs = run_all_baselines(data, config, evaluation_start=evaluation_start)
 
     assert [run.kind for run in runs] == list(BaselineKind)
-    assert all(run.result.config == config for run in runs)
+    assert runs[0].result.config.position_size_pct == 100.0
+    assert all(run.result.config == config for run in runs[1:])
     assert all(run.result.start_date == evaluation_start.date() for run in runs)
     assert runs[0].kind is BaselineKind.BUY_AND_HOLD
     assert runs[0].strategy is None
-    assert all(run.strategy is not None for run in runs[1:])
+    assert runs[1].strategy is None
+    assert all(run.strategy is not None for run in runs[2:])
 
 
 def test_buy_and_hold_uses_the_engine_next_bar_fill_and_eod_close() -> None:

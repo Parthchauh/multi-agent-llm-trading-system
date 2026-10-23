@@ -1,0 +1,1 @@
+{"status": "DIAGNOSTIC_ONLY", "tested_folds": 3, "statistical_certification": false, "paper_eligible": false}

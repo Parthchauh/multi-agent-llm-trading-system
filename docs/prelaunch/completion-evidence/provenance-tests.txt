@@ -1,0 +1,56 @@
+F.....                                                                   [100%]
+================================== FAILURES ===================================
+______ test_nested_installed_directory_does_not_claim_ancestor_checkout _______
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002253A7B3950>
+tmp_path = WindowsPath('D:/TradingAgents/.test_tmp_installed_provenance/test_nested_installed_director0')
+
+    def test_nested_installed_directory_does_not_claim_ancestor_checkout(monkeypatch, tmp_path):
+        installed = tmp_path/'site-packages'
+        installed.mkdir()
+        commands = []
+        def git(command, **kwargs):
+            commands.append(command)
+            assert command[-1] == '--show-toplevel', 'Ancestor checkout files must never be traversed.'
+            return str(tmp_path)
+        monkeypatch.setattr('data.provenance.subprocess.check_output', git)
+>       result = environment_manifest(installed)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_installed_provenance.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+data\provenance.py:100: in environment_manifest
+    "os": platform.platform(),
+          ^^^^^^^^^^^^^^^^^^^
+C:\Users\cpart\anaconda3\Lib\platform.py:1337: in platform
+    system, node, release, version, machine, processor = uname()
+                                                         ^^^^^^^
+C:\Users\cpart\anaconda3\Lib\platform.py:999: in uname
+    release, version, csd, ptype = win32_ver()
+                                   ^^^^^^^^^^^
+C:\Users\cpart\anaconda3\Lib\platform.py:450: in win32_ver
+    version, csd, ptype, is_client = _win32_ver(version, csd, ptype)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\cpart\anaconda3\Lib\platform.py:417: in _win32_ver
+    version = _syscmd_ver()[2]
+              ^^^^^^^^^^^^^
+C:\Users\cpart\anaconda3\Lib\platform.py:287: in _syscmd_ver
+    info = subprocess.check_output(cmd,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+command = 'ver'
+kwargs = {'stdin': -3, 'stderr': -3, 'text': True, 'encoding': 'locale', ...}
+
+    def git(command, **kwargs):
+        commands.append(command)
+>       assert command[-1] == '--show-toplevel', 'Ancestor checkout files must never be traversed.'
+E       AssertionError: Ancestor checkout files must never be traversed.
+E       assert 'r' == '--show-toplevel'
+E         
+E         - --show-toplevel
+E         + r
+
+tests\test_installed_provenance.py:12: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_installed_provenance.py::test_nested_installed_directory_does_not_claim_ancestor_checkout
+1 failed, 5 passed in 34.78s

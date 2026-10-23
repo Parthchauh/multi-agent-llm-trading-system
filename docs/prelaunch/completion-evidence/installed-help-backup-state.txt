@@ -1,0 +1,14 @@
+                                                                               
+ Usage: trading-research backup-state [OPTIONS] SOURCES DESTINATION            
+                                                                               
+ Back up explicit named SQLite/artifact files; stop writers for a consistent   
+ set.                                                                          
+                                                                               
+┌─ Arguments ─────────────────────────────────────────────────────────────────┐
+│ *    sources          PATH  [required]                                      │
+│ *    destination      PATH  [required]                                      │
+└─────────────────────────────────────────────────────────────────────────────┘
+┌─ Options ───────────────────────────────────────────────────────────────────┐
+│ --help          Show this message and exit.                                 │
+└─────────────────────────────────────────────────────────────────────────────┘
+

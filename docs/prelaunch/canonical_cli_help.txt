@@ -1,0 +1,27 @@
+                                                                               
+ Usage: main.py [OPTIONS] COMMAND [ARGS]...                                    
+                                                                               
+ Auditable research and backtesting commands. No live-trading actions are      
+ provided.                                                                     
+                                                                               
+┌─ Options ───────────────────────────────────────────────────────────────────┐
+│ --install-completion          Install completion for the current shell.     │
+│ --show-completion             Show completion for the current shell, to     │
+│                               copy it or customize the installation.        │
+│ --help                        Show this message and exit.                   │
+└─────────────────────────────────────────────────────────────────────────────┘
+┌─ Commands ──────────────────────────────────────────────────────────────────┐
+│ validate-strategy  Validate a declarative strategy JSON through the         │
+│                    canonical Sprint 1 path.                                 │
+│ backtest           Run the deterministic compiler/backtester and write an   │
+│                    auditable JSON result.                                   │
+│ experiment         Run and persist one controlled, cost-aware research      │
+│                    experiment.                                              │
+│ list-runs          List persisted research runs, including failures.        │
+│ show-run           Show one persisted run as canonical JSON.                │
+│ export-report      Render a human-readable Markdown report from the         │
+│                    canonical persisted JSON.                                │
+│ serve-dashboard    Serve a local, read-only dashboard for persisted         │
+│                    research reports.                                        │
+└─────────────────────────────────────────────────────────────────────────────┘
+

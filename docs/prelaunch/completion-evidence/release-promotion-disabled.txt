@@ -1,0 +1,1 @@
+{"blockers": ["STATISTICAL_CERTIFICATION_DISABLED", "INDEPENDENT_REVIEW_REQUIRED", "REAL_PAPER_OBSERVATION_REQUIRED", "EXTERNAL_RELEASE_CHECKLIST_REQUIRED"], "outcome_class": "EXPECTED_RELEASE_REJECTION", "paper_eligible": false, "real_money_eligible": false, "runtime_failure": false, "statistical_certification": false, "status": "RELEASE_BLOCKED"}

@@ -1,0 +1,31 @@
+{
+  "python": "D:\\TradingAgents\\.tools\\p0-acceptance\\clean-env\\Scripts\\python.exe",
+  "cwd": "D:\\TradingAgents\\.tools\\p0-acceptance\\outside",
+  "installed_modules": {
+    "cli.research": "D:\\TradingAgents\\.tools\\p0-acceptance\\clean-env\\Lib\\site-packages\\cli\\research.py",
+    "scripts.run_research_e2e": "D:\\TradingAgents\\.tools\\p0-acceptance\\clean-env\\Lib\\site-packages\\scripts\\run_research_e2e.py"
+  },
+  "commands": {
+    "trading-research": {
+      "exit_code": 0,
+      "command": [
+        "D:\\TradingAgents\\.tools\\p0-acceptance\\clean-env\\Scripts\\trading-research.exe",
+        "--help"
+      ]
+    },
+    "tradingagents": {
+      "exit_code": 0,
+      "command": [
+        "D:\\TradingAgents\\.tools\\p0-acceptance\\clean-env\\Scripts\\tradingagents.exe",
+        "--help"
+      ]
+    },
+    "tradingagents-legacy": {
+      "exit_code": 0,
+      "command": [
+        "D:\\TradingAgents\\.tools\\p0-acceptance\\clean-env\\Scripts\\tradingagents-legacy.exe",
+        "--help"
+      ]
+    }
+  }
+}

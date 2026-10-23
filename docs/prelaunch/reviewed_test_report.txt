@@ -1,0 +1,8 @@
+......................................                                   [100%]
+============================== warnings summary ===============================
+tests/test_research_e2e.py::test_e2e_holdout_not_exposed
+  D:\TradingAgents\tests\test_research_e2e.py:195: Pandas4Warning: Timestamp.utcnow is deprecated and will be removed in a future version. Use Timestamp.now('UTC') instead.
+    sel = FrozenStrategySelection(strategy_id="strat-1", strategy_hash="hash1", frozen_at=pd.Timestamp.utcnow())
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+38 passed, 1 warning in 34.93s

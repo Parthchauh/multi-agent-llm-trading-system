@@ -1,0 +1,57 @@
+                                                                               
+ Usage: tradingagents [OPTIONS] COMMAND [ARGS]...                              
+                                                                               
+ Auditable research and backtesting commands. No live-trading actions are      
+ provided.                                                                     
+                                                                               
+┌─ Options ───────────────────────────────────────────────────────────────────┐
+│ --install-completion          Install completion for the current shell.     │
+│ --show-completion             Show completion for the current shell, to     │
+│                               copy it or customize the installation.        │
+│ --help                        Show this message and exit.                   │
+└─────────────────────────────────────────────────────────────────────────────┘
+┌─ Commands ──────────────────────────────────────────────────────────────────┐
+│ validate-strategy        Validate a declarative strategy JSON through the   │
+│                          canonical Sprint 1 path.                           │
+│ backtest                 Run the deterministic compiler/backtester and      │
+│                          write an auditable JSON result.                    │
+│ experiment               Run and persist one controlled, cost-aware         │
+│                          research experiment.                               │
+│ list-runs                List persisted research runs, including failures.  │
+│ show-run                 Show one persisted run as canonical JSON.          │
+│ export-report            Render a human-readable Markdown report from the   │
+│                          canonical persisted JSON.                          │
+│ serve-dashboard          Serve a local, read-only dashboard for persisted   │
+│                          research reports.                                  │
+│ monitor-simulation       Compare saved simulation paths to frozen replay    │
+│                          evidence under a persistent drift policy.          │
+│ normalize-prices         Apply explicitly available vendor price/volume     │
+│                          factors, without inferring events.                 │
+│ compare-architectures    Compare already-recorded matched treatments on     │
+│                          validation evidence only.                          │
+│ backup-state             Back up explicit named SQLite/artifact files; stop │
+│                          writers for a consistent set.                      │
+│ restore-state            Verify and restore into a new directory, revoking  │
+│                          saved service sessions.                            │
+│ freeze-candidate         Freeze strategy/config/risk/evidence identities.   │
+│                          Paper promotion remains disabled.                  │
+│ simulate-paper           Replay saved bars with persistent operational      │
+│                          controls, without market connections.              │
+│ kill-simulation          Persistently block new simulated entries; valid    │
+│                          next-bar exits remain enabled.                     │
+│ provision-service-user   Local administrative provisioning. Password is     │
+│                          read privately, never as a CLI argument.           │
+│ claim-evidence           Local administrator assigns existing evidence to   │
+│                          one tenant, once.                                  │
+│ serve-evidence-api       Serve the separate TLS-only authenticated,         │
+│                          tenant-scoped read API on loopback.                │
+│ snapshot-dataset         Save canonical CSV and explicit provider identity  │
+│                          as a hashed offline dataset.                       │
+│ record-replay            Record a low-level deterministic backtest; this is │
+│                          not canonical certification.                       │
+│ verify-replay            Check input/bundle integrity and require identical │
+│                          deterministic output.                              │
+│ fold-research            Replay per-fold recorded candidate responses on    │
+│                          DEVELOPMENT data only.                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+

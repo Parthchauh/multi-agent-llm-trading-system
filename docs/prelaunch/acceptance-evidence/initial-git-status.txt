@@ -1,0 +1,38 @@
+ M .gitignore
+ M Dockerfile
+ M README.md
+ M backtesting/engine.py
+ M cli/research.py
+ M data/research_split.py
+ M evaluation/__init__.py
+ M evaluation/baselines.py
+ M evaluation/experiments.py
+ M evaluation/platform.py
+ M main.py
+ M paper_trading/models.py
+ M paper_trading/portfolio.py
+ M paper_trading/runner.py
+ M pyproject.toml
+ M research_dashboard/server.py
+ M risk/evaluator.py
+ M risk/models.py
+ M scripts/run_research_e2e.py
+ M tests/test_research_cli.py
+ M tests/test_research_dashboard.py
+ M tests/test_research_e2e.py
+ M tests/test_sprint5_baselines.py
+ M tests/test_sprint8_platform.py
+ M tradingagents/graph/sprint6_lifecycle.py
+ M uv.lock
+?? RAG_Institute_Assistant_Parth_Apurva.pptx
+?? backtesting/kernel.py
+?? data/provenance.py
+?? docs/
+?? evaluation/campaigns.py
+?? evaluation/certification.py
+?? examples/legacy_tradingagents_demo.py
+?? research.sqlite
+?? risk/profiles.py
+?? tests/prelaunch_fixture.py
+?? tests/test_prelaunch.py
+?? tradingagents/agents/telemetry.py

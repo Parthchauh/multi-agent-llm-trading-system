@@ -1,0 +1,151 @@
+{
+  "errors": [],
+  "generated_at": "2026-10-22T08:57:45Z",
+  "metrics": {
+    ".\\data/provenance.py": {
+      "CONFIDENCE.HIGH": 5,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 5,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 99,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "_totals": {
+      "CONFIDENCE.HIGH": 5,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 5,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 99,
+      "nosec": 0,
+      "skipped_tests": 0
+    }
+  },
+  "results": [
+    {
+      "code": "5 import platform\n6 import subprocess\n7 import sys\n",
+      "col_offset": 0,
+      "end_col_offset": 17,
+      "filename": ".\\data/provenance.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 78,
+        "link": "https://cwe.mitre.org/data/definitions/78.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Consider possible security implications associated with the subprocess module.",
+      "line_number": 6,
+      "line_range": [
+        6
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/blacklists/blacklist_imports.html#b404-import-subprocess",
+      "test_id": "B404",
+      "test_name": "blacklist"
+    },
+    {
+      "code": "44         command = [\"git\", \"-c\", f\"safe.directory={root.as_posix()}\"]\n45         checkout_root = subprocess.check_output(\n46             command + ['rev-parse', '--show-toplevel'], cwd=root,\n47             stderr=subprocess.DEVNULL, text=True).strip()\n48         if Path(checkout_root).resolve() != root:\n",
+      "col_offset": 24,
+      "end_col_offset": 49,
+      "filename": ".\\data/provenance.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 78,
+        "link": "https://cwe.mitre.org/data/definitions/78.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "subprocess call - check for execution of untrusted input.",
+      "line_number": 45,
+      "line_range": [
+        45,
+        46,
+        47
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b603_subprocess_without_shell_equals_true.html",
+      "test_id": "B603",
+      "test_name": "subprocess_without_shell_equals_true"
+    },
+    {
+      "code": "50             raise subprocess.CalledProcessError(1, command)\n51         commit = subprocess.check_output(\n52             [\"git\", \"-c\", f\"safe.directory={root.as_posix()}\", \"rev-parse\", \"HEAD\"],\n53             cwd=root,\n54             stderr=subprocess.DEVNULL,\n55             text=True,\n56         ).strip()\n57         source_paths = subprocess.check_output(\n",
+      "col_offset": 17,
+      "end_col_offset": 9,
+      "filename": ".\\data/provenance.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 78,
+        "link": "https://cwe.mitre.org/data/definitions/78.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "Starting a process with a partial executable path",
+      "line_number": 51,
+      "line_range": [
+        51,
+        52,
+        53,
+        54,
+        55,
+        56
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b607_start_process_with_partial_path.html",
+      "test_id": "B607",
+      "test_name": "start_process_with_partial_path"
+    },
+    {
+      "code": "50             raise subprocess.CalledProcessError(1, command)\n51         commit = subprocess.check_output(\n52             [\"git\", \"-c\", f\"safe.directory={root.as_posix()}\", \"rev-parse\", \"HEAD\"],\n53             cwd=root,\n54             stderr=subprocess.DEVNULL,\n55             text=True,\n56         ).strip()\n57         source_paths = subprocess.check_output(\n",
+      "col_offset": 17,
+      "end_col_offset": 9,
+      "filename": ".\\data/provenance.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 78,
+        "link": "https://cwe.mitre.org/data/definitions/78.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "subprocess call - check for execution of untrusted input.",
+      "line_number": 51,
+      "line_range": [
+        51,
+        52,
+        53,
+        54,
+        55,
+        56
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b603_subprocess_without_shell_equals_true.html",
+      "test_id": "B603",
+      "test_name": "subprocess_without_shell_equals_true"
+    },
+    {
+      "code": "56         ).strip()\n57         source_paths = subprocess.check_output(\n58             command + [\"ls-files\", \"--cached\", \"--others\", \"--exclude-standard\"],\n59             cwd=root,\n60             stderr=subprocess.DEVNULL,\n61             text=True,\n62         ).splitlines()\n63         code = hashlib.sha256()\n",
+      "col_offset": 23,
+      "end_col_offset": 9,
+      "filename": ".\\data/provenance.py",
+      "issue_confidence": "HIGH",
+      "issue_cwe": {
+        "id": 78,
+        "link": "https://cwe.mitre.org/data/definitions/78.html"
+      },
+      "issue_severity": "LOW",
+      "issue_text": "subprocess call - check for execution of untrusted input.",
+      "line_number": 57,
+      "line_range": [
+        57,
+        58,
+        59,
+        60,
+        61,
+        62
+      ],
+      "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b603_subprocess_without_shell_equals_true.html",
+      "test_id": "B603",
+      "test_name": "subprocess_without_shell_equals_true"
+    }
+  ]
+}

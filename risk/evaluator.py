@@ -7,6 +7,7 @@ authoritative backtester into an immutable :class:`RiskAssessment`.
 
 from __future__ import annotations
 
+import hashlib
 import math
 
 from backtesting.models import BacktestConfig, BacktestResult
@@ -303,6 +304,8 @@ def evaluate_risk(result: BacktestResult, policy: RiskPolicy) -> RiskAssessment:
         )
 
     return RiskAssessment(
+        policy_id=policy.policy_id,
+        policy_sha256=hashlib.sha256(policy.model_dump_json().encode()).hexdigest(),
         passed=not violations,
         violations=tuple(violations),
         warnings=warnings,

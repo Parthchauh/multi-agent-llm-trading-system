@@ -125,6 +125,15 @@ class ResearchDevelopmentView:
 
 
 @dataclass(frozen=True)
+class AdaptiveResearchView:
+    """Adaptive code receives validation evidence without confirmatory frames."""
+
+    context: ResearchPartition
+    validation: ResearchPartition
+    decision_timestamp: datetime
+
+
+@dataclass(frozen=True)
 class FrozenStrategySelection:
     """Explicit evidence that strategy identity and parameters are frozen."""
 
@@ -156,6 +165,9 @@ class ResearchDatasetSplit:
         "_test",
         "__final_holdout",
         "_decision_timestamp",
+        "_legacy_access",
+        "_test_released",
+        "_holdout_released",
     )
 
     def __init__(
@@ -166,6 +178,7 @@ class ResearchDatasetSplit:
         test: ResearchPartition,
         final_holdout: ResearchPartition,
         decision_timestamp: datetime | None = None,
+        legacy_access: bool = False,
     ) -> None:
         expected = (
             (context, ResearchPartitionRole.CONTEXT),
@@ -198,22 +211,60 @@ class ResearchDatasetSplit:
         self._test = test
         self.__final_holdout = final_holdout
         self._decision_timestamp = decision
+        self._legacy_access = legacy_access
+        self._test_released = False
+        self._holdout_released = False
 
     def generation_view(self) -> ResearchGenerationView:
         return ResearchGenerationView(self._context, self._decision_timestamp)
 
     def development_view(self) -> ResearchDevelopmentView:
+        if not self._legacy_access:
+            raise ResearchSplitError(
+                "Unrestricted development_view requires explicit legacy_access=True; use adaptive_view."
+            )
         return ResearchDevelopmentView(
             self._context, self._validation, self._test, self._decision_timestamp
         )
 
-    def release_final_holdout(
-        self, selection: FrozenStrategySelection
-    ) -> FinalHoldoutEvaluationView:
+    def adaptive_view(self) -> AdaptiveResearchView:
+        return AdaptiveResearchView(self._context, self._validation, self._decision_timestamp)
+
+    def _authorize_release(self, selection, lifecycle, expected_stage):
         if not isinstance(selection, FrozenStrategySelection):
+            raise ResearchSplitError("Data release requires a frozen strategy selection.")
+        if self._legacy_access and lifecycle is None:
+            return
+        from evaluation.certification import EvaluationLifecycle
+
+        if (
+            not isinstance(lifecycle, EvaluationLifecycle)
+            or lifecycle.stage.value != expected_stage
+        ):
+            raise ResearchSplitError(f"Data release requires lifecycle stage {expected_stage}.")
+        if selection.strategy_hash != lifecycle.strategy_hash:
             raise ResearchSplitError(
-                "Final holdout access requires a FrozenStrategySelection."
+                "Frozen strategy hash does not match the authorized lifecycle."
             )
+
+    def release_confirmatory_test(
+        self, selection: FrozenStrategySelection, *, lifecycle=None
+    ) -> ResearchPartition:
+        self._authorize_release(selection, lifecycle, "TEST_CONFIRMATORY")
+        if not self._legacy_access and self._test_released:
+            raise ResearchSplitError("Confirmatory test was already released for this run.")
+        self._test_released = True
+        return self._test
+
+    def release_final_holdout(
+        self, selection: FrozenStrategySelection, *, lifecycle=None
+    ) -> FinalHoldoutEvaluationView:
+        self._authorize_release(selection, lifecycle, "FINAL_HOLDOUT")
+        if not self._legacy_access and (not self._test_released or self._holdout_released):
+            raise ResearchSplitError(
+                "Holdout requires a prior test release and can be released only once."
+            )
+        self._holdout_released = True
         return FinalHoldoutEvaluationView(selection, self.__final_holdout)
 
     @property

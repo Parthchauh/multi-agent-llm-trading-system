@@ -1,0 +1,18 @@
+..................................................................... [ 16%]
+................................................ [ 28%]
+........................................................................ [ 45%]
+........................................................................ [ 62%]
+........................................................................ [ 79%]
+........................................................................ [ 97%]
+............                                                             [100%]
+============================== warnings summary ===============================
+tests/test_research_e2e.py::test_e2e_holdout_not_exposed
+  D:\TradingAgents\tests\test_research_e2e.py:193: Pandas4Warning: Timestamp.utcnow is deprecated and will be removed in a future version. Use Timestamp.now('UTC') instead.
+    sel = FrozenStrategySelection(strategy_id="strat-1", strategy_hash="hash1", frozen_at=pd.Timestamp.utcnow())
+
+tests/test_sprint35_data_split.py::TestHoldoutAccessControl::test_frozen_selection_requires_non_empty_id
+  D:\TradingAgents\tests\test_sprint35_data_split.py:92: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    frozen_at=__import__("datetime").datetime.utcnow(),
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+417 passed, 2 warnings, 27 subtests passed in 58.14s

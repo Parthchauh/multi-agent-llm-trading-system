@@ -1,0 +1,58 @@
+{
+  "candidate_id": "candidate-a",
+  "context": {
+    "scope": "VALIDATION",
+    "dataset_id": "validation-2024-q1",
+    "dataset_fingerprint": "dataset-sha256-a",
+    "backtest_config_fingerprint": "config-sha256-a",
+    "metrics_version": "1.1"
+  },
+  "policy_id": "research-viability:v1",
+  "is_viable": false,
+  "checks": [
+    {
+      "metric": "number_of_trades",
+      "comparator": ">=",
+      "threshold": 20.0,
+      "observed": 1.0,
+      "status": "FAILED",
+      "detail": "Threshold not satisfied."
+    },
+    {
+      "metric": "total_return_pct",
+      "comparator": ">=",
+      "threshold": 0.0,
+      "observed": 12.0,
+      "status": "PASSED",
+      "detail": "Threshold satisfied."
+    },
+    {
+      "metric": "sharpe_ratio",
+      "comparator": ">=",
+      "threshold": 0.5,
+      "observed": 1.25,
+      "status": "PASSED",
+      "detail": "Threshold satisfied."
+    },
+    {
+      "metric": "max_drawdown_pct",
+      "comparator": "<=",
+      "threshold": 20.0,
+      "observed": 8.0,
+      "status": "PASSED",
+      "detail": "Threshold satisfied."
+    },
+    {
+      "metric": "turnover_pct",
+      "comparator": "<=",
+      "threshold": 2000.0,
+      "observed": 50.0,
+      "status": "PASSED",
+      "detail": "Threshold satisfied."
+    }
+  ],
+  "failed_metrics": [
+    "number_of_trades"
+  ],
+  "undefined_metrics": []
+}

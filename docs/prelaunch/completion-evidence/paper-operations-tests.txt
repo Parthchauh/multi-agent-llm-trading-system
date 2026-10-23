@@ -1,0 +1,33 @@
+..F...............................                                       [100%]
+================================== FAILURES ===================================
+_ test_kill_closes_existing_position_at_next_valid_open_with_independent_golden_cash _
+
+tmp_path = WindowsPath('D:/TradingAgents/.test_tmp_ops/test_kill_closes_existing_posi0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000016D0D70B1D0>
+
+    def test_kill_closes_existing_position_at_next_valid_open_with_independent_golden_cash(tmp_path, monkeypatch):
+        _, _, store, session, frame = setup(tmp_path, monkeypatch)
+        store.process(session, frame.iloc[:1], now=frame.index[0].to_pydatetime())
+        bought = store.process(session, frame.iloc[:2], now=frame.index[1].to_pydatetime())
+        assert bought['fills'][0]['quantity'] == 19.
+        assert bought['snapshot']['cash'] == pytest.approx(8096.1981, abs=1e-8, rel=0)
+        store.kill(session)
+        sold = PaperSimulationStore(store.path).process(session, frame.iloc[:3], now=frame.index[2].to_pydatetime())
+        assert sold['fills'][0]['fill_price'] == pytest.approx(109.89, abs=1e-8, rel=0)
+>       assert sold['snapshot']['cash'] == pytest.approx(10182.02019, abs=1e-8, rel=0)
+E       assert 10182.0202 == 10182.02019 ± 1.0e-08
+E         
+E         comparison failed
+E         Obtained: 10182.0202
+E         Expected: 10182.02019 ± 1.0e-08
+
+tests\test_paper_operations.py:78: AssertionError
+============================== warnings summary ===============================
+tests/test_prelaunch.py::test_exposure_survives_new_strategy_and_campaign
+  D:\TradingAgents\.tools\p0-acceptance\clean-env\Lib\site-packages\langgraph\cache\base\__init__.py:8: LangChainPendingDeprecationWarning: The default value of `allowed_objects` will change in a future version. Pass an explicit value (e.g., allowed_objects='messages' or allowed_objects='core') to suppress this warning.
+    from langgraph.checkpoint.serde.jsonplus import JsonPlusSerializer
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_paper_operations.py::test_kill_closes_existing_position_at_next_valid_open_with_independent_golden_cash
+1 failed, 33 passed, 1 warning in 37.29s

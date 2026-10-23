@@ -1,0 +1,13 @@
+                                                                               
+ Usage: trading-research restore-state [OPTIONS] BACKUP DESTINATION            
+                                                                               
+ Verify and restore into a new directory, revoking saved service sessions.     
+                                                                               
+┌─ Arguments ─────────────────────────────────────────────────────────────────┐
+│ *    backup           PATH  [required]                                      │
+│ *    destination      PATH  [required]                                      │
+└─────────────────────────────────────────────────────────────────────────────┘
+┌─ Options ───────────────────────────────────────────────────────────────────┐
+│ --help          Show this message and exit.                                 │
+└─────────────────────────────────────────────────────────────────────────────┘
+

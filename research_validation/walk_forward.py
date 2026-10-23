@@ -67,7 +67,7 @@ class WalkForwardFold:
 
 
 class WalkForwardPlan:
-    """A fully deterministic sequence of non-overlapping validation folds."""
+    """Deterministic validation folds; overlap is allowed and disclosed in reports."""
 
     @staticmethod
     def build(data: pd.DataFrame, config: WalkForwardConfig) -> tuple[WalkForwardFold, ...]:
@@ -126,6 +126,10 @@ class WalkForwardAggregate(_FrozenStrictModel):
 class WalkForwardReport(_FrozenStrictModel):
     folds: tuple[WalkForwardFoldResult, ...] = Field(min_length=1)
     aggregate: WalkForwardAggregate
+    evaluation_kind: str = "FIXED_STRATEGY_DIAGNOSTIC"
+    fold_specific_generation: bool = False
+    validation_windows_overlap: bool = False
+    promotion_eligible: bool = False
 
 
 def _config_fingerprint(config: BacktestConfig) -> str:
@@ -195,6 +199,7 @@ class WalkForwardEvaluator:
             )
         return WalkForwardReport(
             folds=tuple(results),
+            validation_windows_overlap=walk_forward.step_size < walk_forward.validation_size,
             aggregate=WalkForwardAggregate(
                 metric="total_return_pct",
                 mean=(statistics.fmean(values) if values else None),

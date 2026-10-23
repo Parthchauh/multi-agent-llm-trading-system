@@ -1,0 +1,14 @@
+This repository is an independent research fork of TradingAgents.
+Upstream project: https://github.com/TauricResearch/TradingAgents
+Reviewed fork: https://github.com/Parthchauh/multi-agent-llm-trading-system
+
+The upstream Apache License 2.0 is retained in LICENSE. Upstream names and artwork
+are attribution, not a statement of affiliation, sponsorship or endorsement.
+Local changes add deterministic strategy research, accounting/execution guards,
+research diagnostics, offline reproducibility and operational safety controls.
+
+Third-party distributions retain their own licenses and NOTICE requirements.
+See docs/prelaunch/third-party-inventory.md and the verification SBOM. That
+inventory records package declarations and is not a legal clearance or substitute
+for the complete licenses. Model/provider and market-data terms require separate
+human review before redistribution or external service use.

@@ -1,0 +1,17 @@
+{
+  "python": "3.13.9 | packaged by Anaconda, Inc. | (main, Oct 21 2025, 19:09:58) [MSC v.1929 64 bit (AMD64)]",
+  "executable": "D:\\TradingAgents\\.tools\\p0-acceptance\\clean-env\\Scripts\\python.exe",
+  "prefix": "D:\\TradingAgents\\.tools\\p0-acceptance\\clean-env",
+  "base_prefix": "C:\\Users\\cpart\\anaconda3",
+  "installed_distributions": 161,
+  "project_version": "0.2.3",
+  "direct_url": {
+    "url": "file:///D:/TradingAgents",
+    "dir_info": {
+      "editable": false
+    }
+  },
+  "pyvenv_cfg": "home = C:\\Users\\cpart\\anaconda3\nimplementation = CPython\nuv = 0.13.3\nversion_info = 3.13.9\ninclude-system-site-packages = false\nprompt = tradingagents\n",
+  "original_environment_unchanged": true,
+  "candidate_lock_sha256": "85845943ff89aae846bc53f53ff9250de3bd16e6bbbbbaf55fad19736f4192d9"
+}

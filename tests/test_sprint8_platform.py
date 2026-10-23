@@ -4,8 +4,22 @@ from __future__ import annotations
 
 import sqlite3
 
-from evaluation.experiments import ExperimentArchitecture, ExperimentConfig
-from evaluation.platform import ExperimentRunner, SQLiteResearchRepository, report_markdown
+import pytest
+
+from evaluation.experiments import (
+    ChronologicalSplitConfig,
+    ExperimentArchitecture,
+    ExperimentConfig,
+    ModelRequestConfig,
+    PromptVersion,
+    TransactionCostConfig,
+)
+from evaluation.platform import (
+    ExperimentRunner,
+    ResearchPlatformError,
+    SQLiteResearchRepository,
+    report_markdown,
+)
 
 
 def _config(**overrides) -> ExperimentConfig:
@@ -68,3 +82,59 @@ def test_event_metadata_rejects_secret_fields() -> None:
             timestamp=datetime.now(timezone.utc), run_id="run", node="test",
             status="FAILED", event_type="TEST", metadata={"api_key": "hidden"}
         )
+
+
+def test_reproducibility_record_includes_conditions_and_stable_config_identity(tmp_path) -> None:
+    config = _config(
+        start="2020-01-01",
+        end="2026-01-01",
+        prompt_versions=(
+            PromptVersion(role="strategy_generator", version="v2", content_hash="a" * 64),
+        ),
+        model_settings=ModelRequestConfig(temperature=0.2, timeout_seconds=30),
+        transaction_costs=TransactionCostConfig(
+            initial_capital=100_000.0,
+            commission_pct=0.001,
+            slippage_pct=0.0005,
+            position_size_pct=10.0,
+        ),
+        split_config=ChronologicalSplitConfig(
+            context_end="2023-12-31",
+            validation_end="2024-12-31",
+            test_end="2025-12-31",
+        ),
+    )
+    report = ExperimentRunner(SQLiteResearchRepository(tmp_path / "research.sqlite"), git_commit="abc").run(
+        config,
+        lambda _config, symbol, _repetition: {"status": "COMPLETED", "strategy_id": symbol},
+    )
+
+    provenance = report.reproducibility
+    assert provenance.dataset_id == "fixture-data"
+    assert provenance.symbols == ("AAA", "BBB")
+    assert provenance.start == "2020-01-01"
+    assert provenance.end == "2026-01-01"
+    assert provenance.transaction_costs.position_size_pct == 10.0
+    assert provenance.model_settings.temperature == 0.2
+    assert provenance.prompt_hashes == (("strategy_generator", "a" * 64),)
+    assert len(provenance.experiment_config_sha256) == 64
+    assert provenance.dependency_versions
+    markdown = report_markdown(report)
+    assert "Requested data window" in markdown
+    assert "Experiment configuration SHA-256" in markdown
+
+
+def test_experiment_identifier_cannot_rewrite_an_existing_treatment(tmp_path) -> None:
+    repository = SQLiteResearchRepository(tmp_path / "research.sqlite")
+    original = _config(model="model-a")
+    repository.save_experiment(original)
+    repository.save_experiment(original)  # Exact persistence is idempotent.
+
+    with pytest.raises(ResearchPlatformError, match="different immutable configuration"):
+        repository.save_experiment(_config(model="model-b"))
+
+    with sqlite3.connect(tmp_path / "research.sqlite") as connection:
+        persisted = connection.execute(
+            "SELECT config_json FROM experiments WHERE experiment_id=?", (original.experiment_id,)
+        ).fetchone()[0]
+    assert '"model":"model-a"' in persisted

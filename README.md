@@ -1,3 +1,6 @@
+This is an independent research fork. Upstream names and artwork below credit
+TauricResearch; they do not imply affiliation or endorsement. See [NOTICE](NOTICE).
+
 <p align="center">
   <img src="assets/TauricResearch.png" style="width: 60%; height: auto;">
 </p>
@@ -25,7 +28,92 @@
 
 ---
 
-# TradingAgents: Multi-Agents LLM Financial Trading Framework
+# Multi-Agent LLM Systems for Trading Strategy Generation and Backtesting
+
+This fork is a **research-only quantitative workbench**, not a brokerage
+client and not a Buy/Sell/Hold recommendation product. It never connects to a
+brokerage account or submits real trades.
+
+The authoritative path is deliberately narrow:
+
+```text
+historical OHLCV → causal regime analysis → structured LLM hypothesis
+→ Pydantic + semantic validation → deterministic strategy compiler
+→ next-bar backtest with costs → viability + risk gates
+→ bounded debate / critique / refinement → sealed OOS evaluation → reports
+```
+
+LLMs may generate and review hypotheses. Deterministic code remains the sole
+authority for validation, signal compilation, execution semantics, PnL, risk,
+candidate selection, and final-holdout access.
+
+## Start here
+
+Local reproducibility commands now include `snapshot-dataset`, `normalize-prices`,
+`record-replay`, `verify-replay` and `fold-research`. All five architecture
+treatments are available through `experiment`; use `--development-only` during
+comparative studies to keep test/holdout data sealed. `compare-architectures`
+compares matched validation reports. See the [operating runbook](docs/prelaunch/operating-runbook.md)
+for the frozen registry, durable simulation, authenticated read API and backups.
+Certification and promotion remain disabled; see the [release gates](docs/prelaunch/release-checklist.md).
+
+The supported entry point is `trading-research` (also `python -m cli.research`
+or `python main.py`). The `tradingagents` alias now uses the same research CLI.
+The inherited interface is explicitly `tradingagents-legacy`; its demonstration
+is in `examples/legacy_tradingagents_demo.py`.
+
+Implementation evidence, open release gates, and numeric execution contracts
+are maintained in [the prelaunch status record](docs/prelaunch/implementation-status.md)
+and [architecture notes](docs/architecture.md). Research screening thresholds
+are proposed defaults, not evidence of statistical significance. Paper promotion
+remains disabled until robustness and release requirements are met.
+
+For verification against `uv.lock`, use `uv sync --locked --extra dev --no-editable`.
+Set `UV_PROJECT_ENVIRONMENT` to a separate directory to preserve an existing
+environment. For example, in PowerShell:
+
+```powershell
+$env:UV_PROJECT_ENVIRONMENT = "$PWD\.tools\p0-acceptance\clean-env"
+uv sync --locked --extra dev --no-editable
+& "$env:UV_PROJECT_ENVIRONMENT\Scripts\python.exe" -m pytest -m "not live" -q --basetemp=.test_tmp_clean -p no:cacheprovider
+```
+
+A lockfile mismatch must be resolved and reviewed; do not use `--frozen` to
+silently install a stale lockfile. The [P0 acceptance review](docs/prelaunch/p0-acceptance-review.md)
+distinguishes committed-lock evidence from verification of an uncommitted candidate.
+
+```bash
+python -m pip install -e ".[dev]"
+python -m pytest -q -p no:cacheprovider
+trading-research --help
+```
+
+Run a schema check or deterministic local backtest:
+
+```bash
+trading-research validate-strategy strategy.json
+trading-research backtest strategy.json prices.csv --output artifacts/backtest.json
+```
+
+Run a bounded historical experiment only after placing a valid provider key in
+`.env` (for Gemini, `GOOGLE_API_KEY`)—never commit that file:
+
+```bash
+trading-research experiment --symbol AAPL --architecture multi_agent_full \
+  --provider google --model gemini-2.5-flash
+```
+
+Persisted reports can be viewed locally, read-only:
+
+```bash
+trading-research serve-dashboard --database research.sqlite
+```
+
+The legacy Tauric `TradingAgentsGraph` and its prose Buy/Sell/Hold workflow
+remain in the repository only as isolated upstream reference code. Do not use
+them for strategy execution, selection, or this research workbench.
+
+# Legacy Tauric TradingAgents reference (isolated)
 
 ## News
 - [2026-03] **TradingAgents v0.2.3** released with multi-language support, GPT-5.4 family models, unified model catalog, backtesting date fidelity, and proxy support.

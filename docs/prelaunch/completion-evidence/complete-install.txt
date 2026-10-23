@@ -1,0 +1,5 @@
+Resolved 178 packages in 39ms
+   Building tradingagents @ file:///D:/TradingAgents
+      Built tradingagents @ file:///D:/TradingAgents
+Prepared 1 package in 1m 04s
+error: failed to remove file `D:\TradingAgents\.tools\p0-acceptance\clean-env\Lib\site-packages\../../Scripts/trading-research.exe`: Access is denied. (os error 5)

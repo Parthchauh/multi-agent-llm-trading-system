@@ -1,0 +1,9 @@
+secret-scan: exit 0
+lint: exit 0
+types: exit 1
+security: exit 0
+tests: exit 0
+fixture: exit 0
+promotion-disabled: exit 0
+console-help: exit 0
+sbom: exit 0

@@ -1,0 +1,21 @@
+..................................................................... [ 17%]
+................................................ [ 29%]
+........................................................................ [ 48%]
+........................................................................ [ 66%]
+........................................................................ [ 85%]
+..........................................................               [100%]
+============================== warnings summary ===============================
+tests/test_research_e2e.py::test_e2e_holdout_not_exposed
+  D:\TradingAgents\tests\test_research_e2e.py:191: Pandas4Warning: Timestamp.utcnow is deprecated and will be removed in a future version. Use Timestamp.now('UTC') instead.
+    sel = FrozenStrategySelection(strategy_id="strat-1", strategy_hash="hash1", frozen_at=pd.Timestamp.utcnow())
+
+tests/test_sprint35_data_split.py::TestHoldoutAccessControl::test_frozen_selection_requires_non_empty_id
+  D:\TradingAgents\tests\test_sprint35_data_split.py:92: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    frozen_at=__import__("datetime").datetime.utcnow(),
+
+.venv\Lib\site-packages\_pytest\cacheprovider.py:469
+  D:\TradingAgents\.venv\Lib\site-packages\_pytest\cacheprovider.py:469: PytestCacheWarning: could not create cache path D:\TradingAgents\.pytest_cache\v\cache\nodeids: [WinError 5] Access is denied: 'D:\\TradingAgents\\.pytest_cache\\v\\cache'
+    config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+391 passed, 3 warnings, 27 subtests passed in 30.35s

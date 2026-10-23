@@ -117,6 +117,8 @@ class Sprint6LifecycleConfig(_FrozenStrictModel):
 
     max_debate_rounds: int = Field(default=1, ge=0, le=3)
     max_refinement_rounds: int = Field(default=1, ge=0, le=5)
+    review_only: bool = False
+    llm_risk_review: bool = True
     viability_policy: ViabilityPolicy = Field(default_factory=ViabilityPolicy)
     risk_policy: RiskPolicy = Field(default_factory=RiskPolicy)
     sizing_policy: SizingPolicy | None = None
@@ -210,6 +212,8 @@ class Sprint6ResearchGraph:
         self._validate_dependencies()
 
     def _validate_dependencies(self) -> None:
+        if self.config.review_only and self.config.max_refinement_rounds:
+            raise ValueError("Review-only treatment cannot refine a strategy.")
         if self.config.max_debate_rounds and any(
             agent is None
             for agent in (
@@ -219,24 +223,28 @@ class Sprint6ResearchGraph:
             )
         ):
             raise ValueError("Configured debate rounds require Bull, Bear, and synthesis agents.")
-        if self.config.max_refinement_rounds and any(
+        if (self.config.max_refinement_rounds or self.config.review_only) and any(
             agent is None
             for agent in (
-                self.risk_manager,
                 self.performance_analyst,
                 self.critic,
-                self.refinement_agent,
             )
         ):
             raise ValueError(
                 "Configured refinement rounds require Risk Manager, Performance Analyst, "
                 "Critic, and Refinement agents."
             )
+        if (
+            (self.config.max_refinement_rounds or self.config.review_only)
+            and self.config.llm_risk_review
+            and self.risk_manager is None
+        ):
+            raise ValueError("Enabled LLM risk review requires a Risk Manager agent.")
+        if self.config.max_refinement_rounds and self.refinement_agent is None:
+            raise ValueError("Refinement rounds require a Refinement agent.")
 
     def _event(self, stage: str, outcome: str, detail: str = "") -> Sprint6Event:
-        return Sprint6Event(
-            timestamp=self.clock(), stage=stage, outcome=outcome, detail=detail
-        )
+        return Sprint6Event(timestamp=self.clock(), stage=stage, outcome=outcome, detail=detail)
 
     def run(
         self,
@@ -322,7 +330,8 @@ class Sprint6ResearchGraph:
 
         selected = root_execution
         events.append(self._event("risk_assessment", "passed"))
-        for refinement_round in range(1, self.config.max_refinement_rounds + 1):
+        review_rounds = self.config.max_refinement_rounds or (1 if self.config.review_only else 0)
+        for refinement_round in range(1, review_rounds + 1):
             try:
                 session, review, analysis, critic_report = self._review_strategy(
                     selected, initial=initial
@@ -344,10 +353,13 @@ class Sprint6ResearchGraph:
                     acceptance_results=acceptance_results,
                 )
             sessions.append(session)
-            reviews.append(review)
+            if review is not None:
+                reviews.append(review)
             analyses.append(analysis)
             critics.append(critic_report)
             events.append(self._event("review", "succeeded", f"round={refinement_round}"))
+            if self.config.review_only:
+                break
 
             try:
                 assert self.refinement_agent is not None
@@ -364,9 +376,7 @@ class Sprint6ResearchGraph:
                 )
                 proposals.append(proposal)
             except Exception as exc:
-                events.append(
-                    self._event("refinement_validation", "failed", type(exc).__name__)
-                )
+                events.append(self._event("refinement_validation", "failed", type(exc).__name__))
                 return self._result(
                     Sprint6RunStatus.FAILED_REFINEMENT_VALIDATION,
                     initial,
@@ -518,7 +528,7 @@ class Sprint6ResearchGraph:
         base_config: BacktestConfig,
     ) -> StrategyExecutionRecord:
         generation = dataset_split.generation_view()
-        development = dataset_split.development_view()
+        development = dataset_split.adaptive_view()
         try:
             effective_config = self._effective_config(
                 version, generation.context.feature_frame, base_config
@@ -526,9 +536,7 @@ class Sprint6ResearchGraph:
         except Exception as exc:
             raise _ExecutionStageFailure("risk_sizing", exc) from exc
         try:
-            compiled = self.compiler.compile(
-                version.strategy, development.validation.feature_frame
-            )
+            compiled = self.compiler.compile(version.strategy, development.validation.feature_frame)
         except Exception as exc:
             raise _ExecutionStageFailure("compilation", exc) from exc
         try:
@@ -581,9 +589,7 @@ class Sprint6ResearchGraph:
             )
             if value is not None
         ]
-        strategy_position_pct = min(
-            [version.strategy.position_sizing.value, *position_caps]
-        )
+        strategy_position_pct = min([version.strategy.position_sizing.value, *position_caps])
         strategy_config = BacktestConfig.model_validate(
             {
                 **base_config.model_dump(),
@@ -617,9 +623,11 @@ class Sprint6ResearchGraph:
         execution: StrategyExecutionRecord,
         *,
         initial: ResearchRunResult,
-    ) -> tuple[DebateSession, RiskReview, PerformanceAnalysis, CriticReport]:
+    ) -> tuple[DebateSession, RiskReview | None, PerformanceAnalysis, CriticReport]:
         if initial.regime_assessment is None or initial.strategy_proposal is None:
-            raise ValueError("Completed initial run lacks required structured regime/proposal artifacts.")
+            raise ValueError(
+                "Completed initial run lacks required structured regime/proposal artifacts."
+            )
         if self.config.max_debate_rounds:
             assert self.bull_researcher is not None
             assert self.bear_researcher is not None
@@ -647,18 +655,20 @@ class Sprint6ResearchGraph:
                 objections=("Debate disabled by bounded lifecycle configuration.",),
                 confidence=0.0,
             )
-        assert self.risk_manager is not None
         assert self.performance_analyst is not None
         assert self.critic is not None
-        review = self.risk_manager.review(
-            execution.version.strategy,
-            execution.risk_assessment,
-            execution.backtest_result.metrics,
-            initial.regime_assessment,
-            bull_case,
-            bear_case,
-            debate_session=debate,
-        )
+        review = None
+        if self.config.llm_risk_review:
+            assert self.risk_manager is not None
+            review = self.risk_manager.review(
+                execution.version.strategy,
+                execution.risk_assessment,
+                execution.backtest_result.metrics,
+                initial.regime_assessment,
+                bull_case,
+                bear_case,
+                debate_session=debate,
+            )
         analysis = self.performance_analyst.analyze(
             execution.backtest_result.metrics, execution.evaluation
         )

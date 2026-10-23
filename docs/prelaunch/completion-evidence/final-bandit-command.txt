@@ -1,0 +1,14 @@
+[main]	INFO	profile include tests: None
+[main]	INFO	profile exclude tests: None
+[main]	INFO	cli include tests: None
+[main]	INFO	cli exclude tests: None
+[manager]	WARNING	Test in comment: OAuth is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: scheme is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: name is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: not is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: a is not a test name or id, ignoring
+[manager]	WARNING	Test in comment: credential is not a test name or id, ignoring
+[tester]	WARNING	nosec encountered (B105), but no failed test on file research_service\server.py:51
+[tester]	WARNING	nosec encountered (B105), but no failed test on file research_service\server.py:51
+[tester]	WARNING	nosec encountered (B105), but no failed test on file research_service\server.py:51
+[json]	INFO	JSON output written to file: docs/prelaunch/completion-evidence/final-bandit.json

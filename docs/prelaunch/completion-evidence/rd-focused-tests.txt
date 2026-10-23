@@ -1,0 +1,8 @@
+.................                                                        [100%]
+============================== warnings summary ===============================
+tests/test_fold_campaign.py::test_actual_train_only_agent_adapter_uses_recorded_client_and_training_timestamp
+  D:\TradingAgents\.tools\p0-acceptance\clean-env\Lib\site-packages\langgraph\cache\base\__init__.py:8: LangChainPendingDeprecationWarning: The default value of `allowed_objects` will change in a future version. Pass an explicit value (e.g., allowed_objects='messages' or allowed_objects='core') to suppress this warning.
+    from langgraph.checkpoint.serde.jsonplus import JsonPlusSerializer
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+17 passed, 1 warning in 50.70s
