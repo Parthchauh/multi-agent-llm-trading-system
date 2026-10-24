@@ -44,6 +44,7 @@ jobs:
           persist-credentials: false
       - run: docker build --tag research-prelaunch:verification .
       - run: docker run --rm --network none --read-only --tmpfs /tmp research-prelaunch:verification --help
+      - run: docker run --rm --network none --read-only --tmpfs /tmp --entrypoint python research-prelaunch:verification -m tests.prelaunch_fixture --output /tmp/recorded-e2e
       - run: docker image inspect research-prelaunch:verification --format '{{.Id}}'
       - run: docker image inspect research-prelaunch:verification --format '{{.Id}}' > container-digest.txt
       - uses: aquasecurity/trivy-action@57a97c7e7821a5776cebc9bb87c984fa69cba8f1 # 0.35.0
