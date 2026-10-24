@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 import re
+import sqlite3
 import ssl
 import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -63,6 +64,8 @@ def handler(access: AccessStore, repository: SQLiteResearchRepository, monitor: 
                 self._reply(400, {'error': 'INVALID_REQUEST'})
             except TimeoutError:
                 self._reply(408, {'error': 'REQUEST_TIMEOUT'})
+            except (OSError, sqlite3.Error):
+                self._reply(503, {'error': 'SERVICE_UNAVAILABLE'})
 
         def do_GET(self):
             match = re.fullmatch(r'/v1/experiments/([A-Za-z0-9_.:-]{1,160})', self.path)
@@ -80,6 +83,8 @@ def handler(access: AccessStore, repository: SQLiteResearchRepository, monitor: 
                 self._reply(429 if str(exc) == 'RATE_LIMITED' else 403, {'error': 'ACCESS_DENIED'})
             except (KeyError, ValueError, ResearchPlatformError):
                 self._reply(404, {'error': 'NOT_FOUND'})
+            except (OSError, sqlite3.Error):
+                self._reply(503, {'error': 'SERVICE_UNAVAILABLE'})
 
         def do_DELETE(self):
             scheme, _, token = self.headers.get('Authorization', '').partition(' ')
@@ -92,6 +97,8 @@ def handler(access: AccessStore, repository: SQLiteResearchRepository, monitor: 
                 self._reply(200, {'status': 'SESSION_REVOKED'})
             except PermissionError:
                 self._reply(403, {'error': 'ACCESS_DENIED'})
+            except (OSError, sqlite3.Error):
+                self._reply(503, {'error': 'SERVICE_UNAVAILABLE'})
     return ResearchHandler
 
 

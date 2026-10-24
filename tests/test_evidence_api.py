@@ -1,5 +1,6 @@
 import ipaddress
 import json
+import sqlite3
 import ssl
 import threading
 from datetime import datetime, timedelta, timezone
@@ -36,6 +37,7 @@ def test_real_tls_login_tenant_boundaries_malformed_requests_and_revocation(tmp_
     access.create_user('alpha', 'reader', password, 'read_only')
     access.claim_resource('alpha-evidence', 'alpha')
     access.claim_resource('beta-evidence', 'beta')
+    access.claim_resource('unavailable', 'alpha')
 
     class Report:
         def model_dump(self, **kwargs):
@@ -44,6 +46,8 @@ def test_real_tls_login_tenant_boundaries_malformed_requests_and_revocation(tmp_
         def __init__(self):
             self.reads = []
         def load_report(self, identity):
+            if identity == 'unavailable':
+                raise sqlite3.OperationalError('private database location must not be disclosed')
             self.reads.append(identity)
             return Report()
     repository = Repository()
@@ -77,12 +81,14 @@ def test_real_tls_login_tenant_boundaries_malformed_requests_and_revocation(tmp_
         assert request('GET', '/v1/experiments/unknown', token=token)[0] == 403
         assert request('GET', '/v1/experiments/../secret', token=token)[0] == 404
         assert repository.reads == ['alpha-evidence']
+        assert request('GET', '/v1/experiments/unavailable', token=token) == (
+            503, {'error': 'SERVICE_UNAVAILABLE'})
         assert request('DELETE', '/v1/session', token=token)[0] == 200
         assert request('GET', '/v1/experiments/alpha-evidence', token=token)[0] == 403
         metrics = monitor.snapshot(minimum_requests=1)
-        assert metrics['requests'] == 10
+        assert metrics['requests'] == 11
         assert metrics['access_denials'] == 5
-        assert metrics['server_error_rate'] == 0
+        assert metrics['server_error_rate'] == pytest.approx(1/11)
         assert token not in (tmp_path/'metrics.sqlite').read_bytes().decode('latin1')
     finally:
         server.shutdown()
